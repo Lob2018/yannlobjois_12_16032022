@@ -28,14 +28,11 @@ export function useWindowWidth() {
 }
 
 export function useService(userId, isMocked) {
-  const user = new User()
   const baseUrl = `http://localhost:3001/user/${userId}`
   const navigate = useNavigate()
 
-  const [mainData, setMainData] = useState(null)
-  const [activity, setActivity] = useState(null)
-  const [averageSessions, setAverageSessions] = useState(null)
-  const [performance, setPerformance] = useState(null)
+  const user = new User()
+  const [userData, setData] = useState(new User())
 
   function getMockedData(strId, mockedData) {
     if (strId === undefined) return null
@@ -53,90 +50,90 @@ export function useService(userId, isMocked) {
     return mockedData[pos]
   }
 
-  function isWithoutValues() {
-    if (!mainData && !activity && !averageSessions && !performance)
-      navigate(`/*`)
+  function getMainData() {
+    return axios.get(`${baseUrl}`)
+  }
+  function getActivityData() {
+    return axios.get(`${baseUrl}/activity`)
+  }
+  function getAverageSessionsData() {
+    return axios.get(`${baseUrl}/average-sessions`)
+  }
+  function getPerformanceData() {
+    return axios.get(`${baseUrl}/performance`)
+  }
+
+  function gotError(error) {
+    console.error(error)
+    user.setMainData(null)
+    user.setActivityData(null)
+    user.setAverageSessionsData(null)
+    user.setPerformanceData(null)
+    setData(user)
+    navigate(`/*`)
   }
 
   useEffect(() => {
-    async function getMainData() {
+    const getData = async () => {
       try {
         if (isMocked) {
-          const response = getMockedData(userId, USER_MAIN_DATA)
-          if (response) {
-            user.setMainData(response)
+          const responseMainData = await getMockedData(userId, USER_MAIN_DATA)
+          const responseActivityData = await getMockedData(
+            userId,
+            USER_ACTIVITY
+          )
+          const responseSessionsData = await getMockedData(
+            userId,
+            USER_AVERAGE_SESSIONS
+          )
+          const responseUserPerformance = await getMockedData(
+            userId,
+            USER_PERFORMANCE
+          )
+
+          if (
+            responseMainData &&
+            responseActivityData &&
+            responseSessionsData &&
+            responseUserPerformance
+          ) {
+            user.setMainData(responseMainData)
+            user.setActivityData(responseActivityData)
+            user.setAverageSessionsData(responseSessionsData)
+            user.setPerformanceData(responseUserPerformance)
+            setData(user)
           } else
-            throw new Error("Cannot read properties of null (reading 'main')")
+            throw new Error(
+              "Cannot read mocked data with user's id : " + userId
+            )
         } else {
-          const response = await axios.get(`${baseUrl}`)
-          user.setMainData(response.data.data)
+          await Promise.all([
+            getMainData(),
+            getActivityData(),
+            getAverageSessionsData(),
+            getPerformanceData(),
+          ])
+            .then(function (results) {
+              const mainData = results[0]
+              user.setMainData(mainData.data.data)
+              const activityData = results[1]
+              user.setActivityData(activityData.data.data)
+              const averageData = results[2]
+              user.setAverageSessionsData(averageData.data.data)
+              const getPerformanceDataata = results[3]
+              user.setPerformanceData(getPerformanceDataata.data.data)
+              setData(user)
+            })
+            .catch((error) => {
+              gotError(error)
+            })
         }
-        setMainData(user.getMainData)
       } catch (error) {
-        console.error(error)
-        setMainData(null)
-        isWithoutValues()
+        gotError(error)
       }
     }
-    getMainData()
-  }, [])
-  useEffect(() => {
-    async function getActivity() {
-      try {
-        if (isMocked) {
-          const response = getMockedData(userId, USER_ACTIVITY)
-          user.setActivityData(response)
-        } else {
-          const response = await axios.get(`${baseUrl}/activity`)
-          user.setActivityData(response.data.data)
-        }
-        setActivity(user.getActivityData)
-      } catch (error) {
-        console.error(error)
-        setActivity(null)
-        isWithoutValues()
-      }
-    }
-    getActivity()
-  }, [])
-  useEffect(() => {
-    async function getAverageSessions() {
-      try {
-        if (isMocked) {
-          const response = getMockedData(userId, USER_AVERAGE_SESSIONS)
-          user.setAverageSessionsData(response)
-        } else {
-          const response = await axios.get(`${baseUrl}/average-sessions`)
-          user.setAverageSessionsData(response.data.data)
-        }
-        setAverageSessions(user.getAverageData)
-      } catch (error) {
-        console.error(error)
-        setAverageSessions(null)
-        isWithoutValues()
-      }
-    }
-    getAverageSessions()
-  }, [])
-  useEffect(() => {
-    async function getPerformance() {
-      try {
-        if (isMocked) {
-          const response = getMockedData(userId, USER_PERFORMANCE)
-          user.setPerformanceData(response)
-        } else {
-          const response = await axios.get(`${baseUrl}/performance`)
-          user.setPerformanceData(response.data.data)
-        }
-        setPerformance(user.getPerformanceData)
-      } catch (error) {
-        console.error(error)
-        setPerformance(null)
-        isWithoutValues()
-      }
-    }
-    getPerformance()
+    getData()
   }, [])
 
-  return { mainData, activity, averageSessions, performance }
+  return { userData }
 }
