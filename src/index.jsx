@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import GlobalStyle from './utils/style/GlobalStyle'
+import { MockedProvider } from './utils/context'
 
 import Header from './components/Header'
 
@@ -12,13 +13,15 @@ import QuatCentQuat from './pages/QuatCentQuat'
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <GlobalStyle />
-      <Header />
-      <Routes>
-        <Route path="/" element={<HomeDev />} />
-        <Route path="/user/:id" element={<DashBoard />} />
-        <Route path="*" element={<QuatCentQuat />} />
-      </Routes>
+      <MockedProvider>
+        <GlobalStyle />
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomeDev />} />
+          <Route path="/user/:id" element={<DashBoard />} />
+          <Route path="*" element={<QuatCentQuat />} />
+        </Routes>
+      </MockedProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

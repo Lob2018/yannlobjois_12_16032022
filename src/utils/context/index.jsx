@@ -1,16 +1,13 @@
 import React, { useState, createContext } from 'react'
 
-export const UserContext = createContext()
+export const MockedContext = createContext()
 
-export const UserProvider = ({ children }) => {
-  const [userChoices, setUserChoices] = useState({})
-  const saveUserChoices = (id, isMocked) => {
-    setUserChoices({ id: id, isMocked: isMocked })
-  }
+export const MockedProvider = ({ children }) => {
+  const [isMocked, setIsMocked] = useState(true)
 
   return (
-    <UserContext.Provider value={{ userChoices, saveUserChoices }}>
+    <MockedContext.Provider value={{ isMocked, setIsMocked }}>
       {children}
-    </UserContext.Provider>
+    </MockedContext.Provider>
   )
 }

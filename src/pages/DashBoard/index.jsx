@@ -1,7 +1,9 @@
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { useContext } from 'react'
 
 import { useService } from '../../utils/hooks'
+import { MockedContext } from '../../utils/context'
 
 import Aside from '../../components/Aside'
 
@@ -21,11 +23,10 @@ const DashBoardContainer = styled.div`
  * @returns {React.ReactElement} The dashboard
  */
 function DashBoard() {
+  const { isMocked } = useContext(MockedContext)
+
   const { id } = useParams()
-
-  const { userData } = useService(id, true)
-
-  console.log(JSON.stringify(userData))
+  const { userData } = useService(id, isMocked)
 
   return (
     <DashBoardContainer>

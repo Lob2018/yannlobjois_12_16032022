@@ -1,5 +1,8 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useContext, useState } from 'react'
+
 import styled from 'styled-components'
+import { MockedContext } from '../../utils/context'
 
 const HomeContainer = styled.main`
   display: flex;
@@ -9,35 +12,92 @@ const HomeContainer = styled.main`
   justify-content: center;
 `
 const StyledH1 = styled.h1`
+  margin: 30px;
   color: #000;
-  font-size: 188px;
+  font-size: 96px;
+  height: 99px;
   font-weight: 700;
-  height: 263px;
-  margin: 169px 0 66px 0;
   line-height: 1;
-  @media only screen and (max-width: 768px) {
-    font-size: 96px;
-    height: 99px;
-    margin: 199px 0 11px 0;
-  }
-`
-const StyledLink = styled(Link)`
-  color: #000;
-  font-size: 18px;
-  margin-bottom: 159px;
-  @media only screen and (max-width: 768px) {
-    margin-bottom: 235px;
-    font-size: 14px;
-  }
 `
 
 function HomeDev() {
+  const navigate = useNavigate()
+  const [id, setId] = useState('12')
+
+  const { setIsMocked, isMocked } = useContext(MockedContext)
+
+  function saveMockedChoice(mocked) {
+    setIsMocked(mocked)
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    navigate(`/user/` + id)
+  }
+
   return (
     <HomeContainer>
       <StyledH1>SportSee</StyledH1>
-      <StyledLink to="/" rel="noopener">
-        Retourner sur la page d'accueil
-      </StyledLink>
+      <form
+        style={{
+          display: 'flex',
+          flexFlow: 'column',
+          gap: '20px',
+          fontSize: '24px',
+        }}
+        onSubmit={handleSubmit}
+      >
+        <div
+          style={{
+            display: 'flex',
+            gap: '40px',
+            justifyContent: 'space-between',
+          }}
+        >
+          <label>Identifiant :</label>
+          <select
+            style={{
+              fontSize: '24px',
+            }}
+            onChange={(e) => setId(e.target.value)}
+          >
+            <option value="12">Karl</option>
+            <option value="18">Cecilia</option>
+            <option value="1">Vide</option>
+          </select>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            gap: '40px',
+            justifyContent: 'space-between',
+          }}
+        >
+          <label>Données mockées :</label>
+          <select
+            style={{
+              fontSize: '24px',
+            }}
+            value={isMocked}
+            onChange={(e) => saveMockedChoice(JSON.parse(e.target.value))}
+          >
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+        <input
+          style={{
+            borderRadius: '6px',
+            height: '64px',
+            fontSize: '24px',
+            fontWeight: '500',
+            backgroundColor: '#020203',
+            color: '#FF020E',
+          }}
+          type="submit"
+          value="Envoyer"
+        />
+      </form>
     </HomeContainer>
   )
 }
