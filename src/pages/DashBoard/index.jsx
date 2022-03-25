@@ -25,6 +25,8 @@ function DashBoard() {
 
   const { userData } = useService(id, true)
 
+  console.log(JSON.stringify(userData))
+
   return (
     <DashBoardContainer>
       <Aside />

@@ -1,4 +1,8 @@
 class User {
+  /**
+   * Classe User - User data modeling class
+   * @class User
+   */
   constructor() {
     this.main = this.mainDefault = {
       id: null,
@@ -38,7 +42,12 @@ class User {
       ],
     }
   }
-
+  /**
+   * Set the user's main data
+   * @function
+   * @memberof User
+   * @param {object} data - The JSON user's main data
+   */
   setMainData = (data) => {
     if (data) {
       this.main = {
@@ -54,6 +63,12 @@ class User {
       }
     } else this.main = this.mainDefault
   }
+  /**
+   * Set the user's activity data
+   * @function
+   * @memberof User
+   * @param {object} data - The JSON user's activity data
+   */
   setActivityData = (data) => {
     if (data) {
       this.activity = data.sessions
@@ -61,6 +76,12 @@ class User {
       this.activity = this.activityDefault
     }
   }
+  /**
+   * Set the user's sessions data
+   * @function
+   * @memberof User
+   * @param {object} data - The JSON user's sessions data
+   */
   setAverageSessionsData = (data) => {
     if (data) {
       this.average = data.sessions
@@ -68,6 +89,12 @@ class User {
       this.average = this.averageDefault
     }
   }
+  /**
+   * Set the user's performance data
+   * @function
+   * @memberof User
+   * @param {object} data - The JSON user's performance data
+   */
   setPerformanceData = (data) => {
     if (data) {
       this.performance = {
@@ -78,18 +105,66 @@ class User {
       this.performance = this.performanceDefault
     }
   }
+  /**
+   * Set the set of user data with a data array
+   * @function
+   * @memberof User
+   * @param {array} data - The set of user data with a data array
+   */
+  setAllData = ([...data]) => {
+    this.setMainData(data[0])
+    this.setActivityData(data[1])
+    this.setAverageSessionsData(data[2])
+    this.setPerformanceData(data[3])
+  }
 
+  /**
+   * Get the user's main data
+   * @function
+   * @memberof User
+   * @returns {object} - The user's main data or null if empty
+   */
   getMainData = () => {
     return this.main.id ? this.main : null
   }
+  /**
+   * Get the user's activity data
+   * @function
+   * @memberof User
+   * @returns {object} - The user's activity data or null if empty
+   */
   getActivityData = () => {
     return this.activity[0].day ? this.activity : null
   }
+  /**
+   * Get the user's sessions data
+   * @function
+   * @memberof User
+   * @returns {object} - The user's sessions data or null if empty
+   */
   getAverageData = () => {
     return this.average[0].day ? this.average : null
   }
+  /**
+   * Get the user's performance data
+   * @function
+   * @memberof User
+   * @returns {object} - The user's performance data or null if empty
+   */
   getPerformanceData = () => {
     return this.performance.performance_data[0].value ? this.performance : null
+  }
+
+  /**
+   * Clear the set of user data
+   * @function
+   * @memberof User
+   */
+  clearData() {
+    this.main = this.mainDefault
+    this.activity = this.activityDefault
+    this.average = this.averageDefault
+    this.performance = this.performanceDefault
   }
 }
 export default User

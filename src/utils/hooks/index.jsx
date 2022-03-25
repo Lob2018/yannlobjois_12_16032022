@@ -65,10 +65,7 @@ export function useService(userId, isMocked) {
 
   function gotError(error) {
     console.error(error)
-    user.setMainData(null)
-    user.setActivityData(null)
-    user.setAverageSessionsData(null)
-    user.setPerformanceData(null)
+    user.clearData()
     setData(user)
     navigate(`/*`)
   }
@@ -90,17 +87,18 @@ export function useService(userId, isMocked) {
             userId,
             USER_PERFORMANCE
           )
-
           if (
             responseMainData &&
             responseActivityData &&
             responseSessionsData &&
             responseUserPerformance
           ) {
-            user.setMainData(responseMainData)
-            user.setActivityData(responseActivityData)
-            user.setAverageSessionsData(responseSessionsData)
-            user.setPerformanceData(responseUserPerformance)
+            user.setAllData([
+              responseMainData,
+              responseActivityData,
+              responseSessionsData,
+              responseUserPerformance,
+            ])
             setData(user)
           } else
             throw new Error(
@@ -114,14 +112,12 @@ export function useService(userId, isMocked) {
             getPerformanceData(),
           ])
             .then(function (results) {
-              const mainData = results[0]
-              user.setMainData(mainData.data.data)
-              const activityData = results[1]
-              user.setActivityData(activityData.data.data)
-              const averageData = results[2]
-              user.setAverageSessionsData(averageData.data.data)
-              const getPerformanceDataata = results[3]
-              user.setPerformanceData(getPerformanceDataata.data.data)
+              user.setAllData([
+                results[0].data.data,
+                results[1].data.data,
+                results[2].data.data,
+                results[3].data.data,
+              ])
               setData(user)
             })
             .catch((error) => {
