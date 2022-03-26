@@ -11,7 +11,6 @@ import Aside from '../../components/Aside'
 const DashBoardContainer = styled.div`
   width: 100%;
   height: calc(100% - 91px);
-  margin-top: -1px;
   display: flex;
   @media only screen and (max-width: 768px) {
   }
