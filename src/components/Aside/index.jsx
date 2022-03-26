@@ -11,7 +11,7 @@ import Bodybuilding from '../../assets/bodybuilding.svg'
 const AsideContainer = styled.aside`
   background-color: ${colors.bgMenu};
   width: 117px;
-  height: calc(100vh - 90px);
+  height: 100%;
   align-items: center;
   display: flex;
   flex-direction: column;

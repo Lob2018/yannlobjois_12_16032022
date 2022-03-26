@@ -5,9 +5,15 @@ const StyledGlobalStyle = createGlobalStyle`
     * {
       font-family: 'Roboto', sans-serif;                
     }    
-    body {
+    html,body {
+      display:flex;
+      min-height: 100%;
+      width:100%;
       margin: 0;
       background-color: ${colors.bg};
+    }
+    #root{      
+      width:100%;
     }
     header{
     }

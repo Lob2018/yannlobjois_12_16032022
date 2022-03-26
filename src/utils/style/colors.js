@@ -1,6 +1,6 @@
 const colors = {
   strPrimary: '#FF020E',
-  bd: '#FFF',
+  bg: '#FFF',
   bgMenu: '#020203',
   bgCards: '#FBFBFB',
   strCardsTitle: '#20253A',
