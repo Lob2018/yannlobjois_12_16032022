@@ -1,10 +1,12 @@
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useContext } from 'react'
-import colors from '../../utils/style/colors'
+import colors from '../../style/colors'
 
-import { useService } from '../../utils/hooks'
-import { MockedContext } from '../../utils/context'
+import LineChart from '../../components/Charts/LineChart'
+import { useService } from '../../service/useService'
+import { useWindowWidth } from '../../utils/helper/useWindowWidth'
+import { MockedContext } from '../../context'
 
 import Aside from '../../components/Aside'
 
@@ -61,8 +63,8 @@ const FirstChartContainer = styled.div`
   width: 100%;
   height: 320px;
   border-radius: 5px;
-  background-color: red;
   background-color: ${colors.bgCards};
+  z-indew
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0212249);
   @media only screen and (max-width: 768px) {
   }
@@ -70,15 +72,13 @@ const FirstChartContainer = styled.div`
 
 const SecondChartsContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
-  gap: 30px;
+  justify-content: space-between;
+  gap: 3.59%;
   width: 100%;
   height: 263px;
   border-radius: 5px;
-  background-color: red;
   background-color: ${colors.bgCards};
-  @media only screen and (max-width: 768px) {
-  }
+  background-color: red;
 `
 
 const SecondaryChartsContainer = styled.div`
@@ -98,12 +98,62 @@ const StyledCard = styled.div`
   width: 100%;
   height: 124px;
   border-radius: 5px;
-  background-color: red;
   background-color: ${colors.bgCards};
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0212249);
   @media only screen and (max-width: 768px) {
   }
 `
+
+const dimensions = {
+  width: 258,
+  height: 213,
+  margin: { top: 30, right: 0, bottom: 20, left: 0 },
+}
+
+const portfolioData = {
+  name: 'Portfolio',
+  color: '#ffffff',
+  items: [
+    {
+      date: '2019-07-15',
+      marketvalue: 87.08712,
+      value: 0,
+    },
+    {
+      date: '2020-01-14',
+      marketvalue: 91.069328,
+      value: 4.572671595983424,
+    },
+    {
+      date: '2020-01-15',
+      marketvalue: 91.218185,
+      value: 4.743600431384113,
+    },
+    {
+      date: '2020-01-16',
+      marketvalue: 91.238029,
+      value: 4.76638680897933,
+    },
+    {
+      date: '2020-01-17',
+      marketvalue: 91.218185,
+      value: 4.743600431384113,
+    },
+    {
+      date: '2020-01-21',
+      marketvalue: 91.476196,
+      value: 5.039868122863633,
+    },
+    {
+      date: '2020-01-22',
+      marketvalue: 91.555588,
+      value: 5.1310320056513525,
+    },
+  ].map((d) => ({
+    ...d,
+    date: new Date(d.date),
+  })),
+}
 
 /**
  * DashBoard page component
@@ -111,10 +161,14 @@ const StyledCard = styled.div`
  * @returns {React.ReactElement} The dashboard
  */
 function DashBoard() {
+  const { windowWidth } = useWindowWidth()
+
   const { isMocked } = useContext(MockedContext)
   const { id } = useParams()
 
   const { userData } = useService(id, isMocked)
+
+  console.log(userData.getAverageData())
 
   return (
     <DashBoardContainer>
@@ -131,7 +185,50 @@ function DashBoard() {
         <StyledChartsContainer>
           <MainChartsContainer>
             <FirstChartContainer></FirstChartContainer>
-            <SecondChartsContainer></SecondChartsContainer>
+            <SecondChartsContainer>
+              {userData.getAverageData() && (
+                <LineChart
+                  data={[
+                    // data={[portfolioData]}
+                    {
+                      name: 'Portfolio',
+                      color: '#ffffff',
+                      items: userData.getAverageData(),
+                    },
+                  ]}
+                  dimensions={{
+                    width:
+                      windowWidth < 1280
+                        ? windowWidth * 0.22
+                        : windowWidth * 0.179,
+                    height: 213,
+                    margin: { top: 30, right: 0, bottom: 15, left: 0 },
+                  }}
+                />
+              )}
+              {/* <LineChart
+                data={[portfolioData]}
+                dimensions={{
+                  width:
+                    windowWidth < 1280
+                      ? windowWidth * 0.22
+                      : windowWidth * 0.179,
+                  height: 213,
+                  margin: { top: 30, right: 0, bottom: 20, left: 0 },
+                }}
+              />
+              <LineChart
+                data={[portfolioData]}
+                dimensions={{
+                  width:
+                    windowWidth < 1280
+                      ? windowWidth * 0.22
+                      : windowWidth * 0.179,
+                  height: 213,
+                  margin: { top: 30, right: 0, bottom: 20, left: 0 },
+                }}
+              /> */}
+            </SecondChartsContainer>
           </MainChartsContainer>
           <SecondaryChartsContainer>
             <StyledCard></StyledCard> <StyledCard></StyledCard>{' '}

@@ -111,7 +111,7 @@ class User {
    * @memberof User
    * @param {array} data - The set of user data with a data array
    */
-  setAllData = ([...data]) => {
+  setAllData = (data) => {
     this.setMainData(data[0])
     this.setActivityData(data[1])
     this.setAverageSessionsData(data[2])
@@ -134,7 +134,7 @@ class User {
    * @returns {object} - The user's activity data or null if empty
    */
   getActivityData = () => {
-    return this.activity[0].day ? this.activity : null
+    return this.activity && this.activity[0].day ? this.activity : null
   }
   /**
    * Get the user's sessions data
@@ -143,7 +143,7 @@ class User {
    * @returns {object} - The user's sessions data or null if empty
    */
   getAverageData = () => {
-    return this.average[0].day ? this.average : null
+    return this.average && this.average[0].day ? this.average : null
   }
   /**
    * Get the user's performance data
@@ -152,7 +152,11 @@ class User {
    * @returns {object} - The user's performance data or null if empty
    */
   getPerformanceData = () => {
-    return this.performance.performance_data[0].value ? this.performance : null
+    return this.performance &&
+      this.performance.performance_data &&
+      this.performance.performance_data[0].value
+      ? this.performance
+      : null
   }
 
   /**

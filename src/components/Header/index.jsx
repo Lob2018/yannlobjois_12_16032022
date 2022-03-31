@@ -1,7 +1,7 @@
 import { Link, NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import Logo from '../../assets/logo.svg'
-import colors from '../../utils/style/colors'
+import colors from '../../style/colors'
 
 const StyledHeaderLogo = styled.img`
   width: 178px;

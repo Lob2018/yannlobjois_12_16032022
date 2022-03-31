@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import GlobalStyle from './utils/style/GlobalStyle'
-import { MockedProvider } from './utils/context'
+import GlobalStyle from './style/GlobalStyle'
+import { MockedProvider } from './context'
 
 import Header from './components/Header'
 

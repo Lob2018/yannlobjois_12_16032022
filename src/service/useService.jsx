@@ -1,31 +1,14 @@
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 import axios from 'axios'
 
-import User from '../../models/User.js'
+import User from '../models/User.js'
 
-import USER_MAIN_DATA from '../../mocked-data/USER_MAIN_DATA.json'
-import USER_ACTIVITY from '../../mocked-data/USER_ACTIVITY.json'
-import USER_AVERAGE_SESSIONS from '../../mocked-data/USER_AVERAGE_SESSIONS.json'
-import USER_PERFORMANCE from '../../mocked-data/USER_PERFORMANCE.json'
-
-export function useWindowWidth() {
-  const [windowWidth, setWidth] = useState(window.innerWidth)
-
-  function changeWindowWidth() {
-    setWidth(window.innerWidth)
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', changeWindowWidth)
-    return () => {
-      window.removeEventListener('resize', changeWindowWidth)
-    }
-  }, [])
-
-  return { windowWidth }
-}
+import USER_MAIN_DATA from '../mocked-data/USER_MAIN_DATA.json'
+import USER_ACTIVITY from '../mocked-data/USER_ACTIVITY.json'
+import USER_AVERAGE_SESSIONS from '../mocked-data/USER_AVERAGE_SESSIONS.json'
+import USER_PERFORMANCE from '../mocked-data/USER_PERFORMANCE.json'
 
 export function useService(userId, isMocked) {
   const baseUrl = `http://localhost:3001/user/${userId}`

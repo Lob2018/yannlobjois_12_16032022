@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 
 import styled from 'styled-components'
-import { MockedContext } from '../../utils/context'
+import { MockedContext } from '../../context'
 
 const HomeContainer = styled.main`
   display: flex;

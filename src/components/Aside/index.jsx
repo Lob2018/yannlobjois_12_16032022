@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
-import colors from '../../utils/style/colors'
+import colors from '../../style/colors'
 
 import Yoga from '../../assets/yoga.svg'
 import Swimming from '../../assets/swimming.svg'
