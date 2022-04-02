@@ -73,12 +73,13 @@ const FirstChartContainer = styled.div`
 const SecondChartsContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 3.59%;
   width: 100%;
   height: 263px;
-  border-radius: 5px;
+  //border-radius: 5px;
   background-color: ${colors.bgCards};
-  background-color: red;
+  //background-color: red;
 `
 
 const SecondaryChartsContainer = styled.div`
@@ -92,7 +93,6 @@ const SecondaryChartsContainer = styled.div`
     width: 100%;
   }
 `
-
 const StyledCard = styled.div`
   margin: 0px;
   width: 100%;
@@ -103,57 +103,6 @@ const StyledCard = styled.div`
   @media only screen and (max-width: 768px) {
   }
 `
-
-const dimensions = {
-  width: 258,
-  height: 213,
-  margin: { top: 30, right: 0, bottom: 20, left: 0 },
-}
-
-const portfolioData = {
-  name: 'Portfolio',
-  color: '#ffffff',
-  items: [
-    {
-      date: '2019-07-15',
-      marketvalue: 87.08712,
-      value: 0,
-    },
-    {
-      date: '2020-01-14',
-      marketvalue: 91.069328,
-      value: 4.572671595983424,
-    },
-    {
-      date: '2020-01-15',
-      marketvalue: 91.218185,
-      value: 4.743600431384113,
-    },
-    {
-      date: '2020-01-16',
-      marketvalue: 91.238029,
-      value: 4.76638680897933,
-    },
-    {
-      date: '2020-01-17',
-      marketvalue: 91.218185,
-      value: 4.743600431384113,
-    },
-    {
-      date: '2020-01-21',
-      marketvalue: 91.476196,
-      value: 5.039868122863633,
-    },
-    {
-      date: '2020-01-22',
-      marketvalue: 91.555588,
-      value: 5.1310320056513525,
-    },
-  ].map((d) => ({
-    ...d,
-    date: new Date(d.date),
-  })),
-}
 
 /**
  * DashBoard page component
@@ -189,9 +138,8 @@ function DashBoard() {
               {userData.getAverageData() && (
                 <LineChart
                   data={[
-                    // data={[portfolioData]}
                     {
-                      name: 'Portfolio',
+                      name: 'SessionsAverage',
                       color: '#ffffff',
                       items: userData.getAverageData(),
                     },
@@ -201,33 +149,11 @@ function DashBoard() {
                       windowWidth < 1280
                         ? windowWidth * 0.22
                         : windowWidth * 0.179,
-                    height: 213,
+                    height: 218,
                     margin: { top: 30, right: 0, bottom: 15, left: 0 },
                   }}
                 />
               )}
-              {/* <LineChart
-                data={[portfolioData]}
-                dimensions={{
-                  width:
-                    windowWidth < 1280
-                      ? windowWidth * 0.22
-                      : windowWidth * 0.179,
-                  height: 213,
-                  margin: { top: 30, right: 0, bottom: 20, left: 0 },
-                }}
-              />
-              <LineChart
-                data={[portfolioData]}
-                dimensions={{
-                  width:
-                    windowWidth < 1280
-                      ? windowWidth * 0.22
-                      : windowWidth * 0.179,
-                  height: 213,
-                  margin: { top: 30, right: 0, bottom: 20, left: 0 },
-                }}
-              /> */}
             </SecondChartsContainer>
           </MainChartsContainer>
           <SecondaryChartsContainer>

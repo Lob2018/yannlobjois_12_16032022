@@ -44,7 +44,7 @@ const StyledGlobalStyle = createGlobalStyle`
       header nav a {
         font-size:12px;        
       }   
-    }    
+    }   
 `
 function GlobalStyle() {
   return <StyledGlobalStyle />
