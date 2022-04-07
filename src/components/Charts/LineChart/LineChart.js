@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 
 import { svgRoundedRectanglePath } from '../../../utils/helper/svgRoundedRectanglePath'
+import { getMinMaxObjectValueOfObjectInArray } from '../../../utils/helper/getMinMaxObjectValueOfObjectInArray'
 
 const LineChart = ({ data = [], dimensions = {} }) => {
   // The ref will hold our component's SVG DOM element, it's initialized null
@@ -32,11 +33,24 @@ const LineChart = ({ data = [], dimensions = {} }) => {
       .scaleLinear()
       .domain([1, 7])
       .range([-1, width + 1])
+
+    // Optimize the vertical rendering
+    const max = getMinMaxObjectValueOfObjectInArray(
+      data[0].items,
+      'sessionLength',
+      1
+    )
+    const min = getMinMaxObjectValueOfObjectInArray(
+      data[0].items,
+      'sessionLength',
+      -1
+    )
+    const amplitude = max - min
     const yScale = d3
       .scaleLinear()
       .domain([
-        d3.min(data[0].items, (d) => d.sessionLength) - 20,
-        d3.max(data[0].items, (d) => d.sessionLength) + 30,
+        d3.min(data[0].items, (d) => d.sessionLength) - amplitude / 3,
+        d3.max(data[0].items, (d) => d.sessionLength) + amplitude / 2,
       ])
       .range([height, 0])
 
@@ -302,7 +316,6 @@ const LineChart = ({ data = [], dimensions = {} }) => {
      * @param {object} event - The mouse event
      */
     function mousemove(event) {
-      console.log(typeof event)
       // Tooltip
       var x0 = xScaleText.invert(d3.pointer(event)[0]),
         i = bisectDate(data[0].items, x0),

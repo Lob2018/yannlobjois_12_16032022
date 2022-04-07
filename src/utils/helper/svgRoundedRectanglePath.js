@@ -6,7 +6,7 @@
  * @param {number} h - The height of the rectangle
  * @param {number} r - The radius value in pixels
  * @param {object} radius - The booleans to turn the rectangle's radius angle on (true) or off (false) - tr is for the rectangle's top right, bl for bottom left, etc.)
- * @returns
+ * @returns {object} - The SVG path
  */
 export function svgRoundedRectanglePath(x, y, w, h, r, radius) {
   var retval
