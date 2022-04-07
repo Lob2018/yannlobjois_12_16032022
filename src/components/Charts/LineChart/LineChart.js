@@ -2,6 +2,8 @@
 import { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 
+import { svgRoundedRectanglePath } from '../../../utils/helper/svgRoundedRectanglePath'
+
 const LineChart = ({ data = [], dimensions = {} }) => {
   // The ref will hold our component's SVG DOM element, it's initialized null
   const svgRef = useRef(null)
@@ -10,6 +12,7 @@ const LineChart = ({ data = [], dimensions = {} }) => {
   const svgHeight = height + margin.top + margin.bottom
 
   useEffect(() => {
+    // X axis's labels
     const dayDataSet = [
       { day: 'L' },
       { day: 'M' },
@@ -19,6 +22,7 @@ const LineChart = ({ data = [], dimensions = {} }) => {
       { day: 'S' },
       { day: 'D' },
     ]
+
     // Transform data values into visual variables
     const xScaleText = d3
       .scaleLinear()
@@ -31,63 +35,48 @@ const LineChart = ({ data = [], dimensions = {} }) => {
     const yScale = d3
       .scaleLinear()
       .domain([
-        d3.min(data[0].items, (d) => d.sessionLength) - 15,
+        d3.min(data[0].items, (d) => d.sessionLength) - 20,
         d3.max(data[0].items, (d) => d.sessionLength) + 30,
       ])
       .range([height, 0])
-    // The ref Get and Set - Create root container where we will append all other chart elements
+
+    // Create root container where we will append all other chart elements (current is the ref Get and Set)
     const svgEl = d3.select(svgRef.current)
     svgEl.selectAll('*').remove() // Clear svg content before adding new elements
     const svg = svgEl
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`)
 
-    // Background rounded
-    function roundedRect(x, y, w, h, r, tl, tr, bl, br) {
-      var retval
-      retval = 'M' + (x + r) + ',' + y
-      retval += 'h' + (w - 2 * r)
-      if (tr) {
-        retval += 'a' + r + ',' + r + ' 0 0 1 ' + r + ',' + r
-      } else {
-        retval += 'h' + r
-        retval += 'v' + r
-      }
-      retval += 'v' + (h - 2 * r)
-      if (br) {
-        retval += 'a' + r + ',' + r + ' 0 0 1 ' + -r + ',' + r
-      } else {
-        retval += 'v' + r
-        retval += 'h' + -r
-      }
-      retval += 'h' + (2 * r - w)
-      if (bl) {
-        retval += 'a' + r + ',' + r + ' 0 0 1 ' + -r + ',' + -r
-      } else {
-        retval += 'h' + -r
-        retval += 'v' + -r
-      }
-      retval += 'v' + (2 * r - h)
-      if (tl) {
-        retval += 'a' + r + ',' + r + ' 0 0 1 ' + r + ',' + -r
-      } else {
-        retval += 'v' + -r
-        retval += 'h' + r
-      }
-      retval += 'z'
-      return retval
-    }
-
-    // svgEl.attr('id', 'svg-AverageSessionsData')
+    // Draws the background color red
     svg
       .append('path')
       .attr('d', function (d) {
-        return roundedRect(0, 0, svgWidth, svgHeight, 5, 1, 1, 1, 1)
+        return svgRoundedRectanglePath(0, 0, svgWidth, svgHeight, 5, {
+          tl: 1,
+          tr: 1,
+          br: 1,
+          bl: 1,
+        })
       })
       .attr('transform', `translate(-${margin.left},-${margin.top})`)
       .style('fill', '#F00')
+    // Draws the background darkest color red for the selected value with opacity at 0
+    svg
+      .append('path')
+      .attr('d', function (d) {
+        return svgRoundedRectanglePath(0, 0, svgWidth, svgHeight, 5, {
+          tl: 0,
+          tr: 1,
+          br: 1,
+          bl: 0,
+        })
+      })
+      .attr('transform', `translate(-${margin.left},-${margin.top})`)
+      .attr('id', 'background-day-selected-change')
+      .style('fill', '#ea010b')
+      .attr('opacity', 0)
 
-    // Add X grid lines with modified labels
+    // Draws the x axis labels modified
     const xAxis = d3
       .axisBottom(xScaleText)
       .tickFormat(function (d) {
@@ -108,13 +97,14 @@ const LineChart = ({ data = [], dimensions = {} }) => {
       .attr('font-size', '0.75rem')
       .attr('font-weight', '500')
 
+    // Create the rounded chart's line values
     const line = d3
       .line()
       .x((d) => xScale(d.day))
       .y((d) => yScale(d.sessionLength))
-      .curve(d3.curveMonotoneX)
+      .curve(d3.curveCardinal)
 
-    // Line's gradient
+    // Create the line's gradient
     const linearGradient = svg
       .append('defs')
       .append('linearGradient')
@@ -130,7 +120,7 @@ const LineChart = ({ data = [], dimensions = {} }) => {
       .attr('offset', '100%')
       .attr('stop-color', '#FFF')
       .attr('stop-opacity', '1')
-
+    // Draws the rounded chart's line with the gradient
     svg
       .selectAll('.line')
       .data(data)
@@ -142,7 +132,7 @@ const LineChart = ({ data = [], dimensions = {} }) => {
       .attr('stroke', 'url(#linear-gradient)')
       .attr('d', (d) => line(d.items))
 
-    // Title
+    // Draws the title 1st line
     svg
       .append('text')
       .attr('opacity', 0.7)
@@ -154,7 +144,7 @@ const LineChart = ({ data = [], dimensions = {} }) => {
       .style('font-weight', '500')
       .style('font-size', '15px')
       .text('Durée moyenne des')
-    // Continuation of the title
+    // Draws the title 2nd line
     svg
       .append('text')
       .attr('opacity', 0.7)
@@ -167,7 +157,7 @@ const LineChart = ({ data = [], dimensions = {} }) => {
       .style('font-size', '15px')
       .text('sessions')
 
-    // Tooltip
+    // Draws the tooltip and a mouse listener
     var tooltip = addTooltip()
     var bisectDate = d3.bisector((d) => d.day).center
     svg
@@ -180,33 +170,38 @@ const LineChart = ({ data = [], dimensions = {} }) => {
       })
       .on('mouseout', function (event) {
         tooltip.style('display', 'none')
+        // Hide the background
+        d3.select('#background-day-selected-change').attr('opacity', 0)
       })
       .on('mousemove', mousemove)
 
+    /**
+     * Create the tooltip (with the circle for the value position)
+     * @function
+     * @memberof LineChart
+     * @returns {object} - The svg of the tooltip
+     */
     function addTooltip() {
       // Creating a group that will contain the entire tooltip plus the tracking circle
-      var tooltipInAdd = svg
+      var tooltipGroup = svg
         .append('g')
         .attr('id', 'tooltip')
         .style('display', 'none')
-
-      // The transparent white outer circle
-      tooltipInAdd
+      // Draw the transparent white outer circle
+      tooltipGroup
         .append('circle')
         .attr('opacity', 0.3)
         .attr('fill', '#FFF')
         .attr('r', 15)
-
-      // The white inner circle
-      tooltipInAdd
+      // Draw the white inner circle
+      tooltipGroup
         .append('circle')
         .attr('fill', '#FFF')
         .attr('stroke', '#fff')
         .attr('stroke-width', '1.5px')
         .attr('r', 5)
-
-      // The tooltip
-      tooltipInAdd
+      // Draw tooltip's background
+      tooltipGroup
         .append('rect')
         .attr('width', 39)
         .attr('height', 25)
@@ -215,9 +210,8 @@ const LineChart = ({ data = [], dimensions = {} }) => {
         .style('stroke-width', '1')
         .attr('transform', 'translate(-19.5, -43)')
         .attr('id', 'tooltip-container-sessionLength')
-
-      // This element will contain all our text
-      var text = tooltipInAdd
+      // Draw the text container
+      var text = tooltipGroup
         .append('text')
         .attr('font-size', '8px')
         .attr('font-weight', '500')
@@ -226,17 +220,23 @@ const LineChart = ({ data = [], dimensions = {} }) => {
         .style('fill', '#000')
         .attr('transform', 'translate(0, -28)')
         .attr('id', 'tooltip-text-container-sessionLength')
-      // The text for the average session value found
+      // Draw the text for the average session value found
       text
         .append('tspan')
         .attr('id', 'tooltip-text-sessionLength')
         .style('font-weight', 'bold')
-      return tooltipInAdd
+      return tooltipGroup
     }
 
-    //Update the tooltip value and improve his position (first and last)
-    function updateTooltipValue(i, d) {
-      d3.select('#tooltip-text-sessionLength').text(d.sessionLength + ' min')
+    /**
+     * Update the tooltip text position for the first and the last values
+     * @function
+     * @memberof LineChart
+     * @param {number} i - The x axis day (0-6)
+     * @param {string} sessionLengthValue -The updated session's length value
+     */
+    function updateTooltipValue(i, sessionLengthValue) {
+      d3.select('#tooltip-text-sessionLength').text(sessionLengthValue + ' min')
       if (i === 0) {
         d3.select('#tooltip-container-sessionLength').attr(
           'transform',
@@ -267,24 +267,63 @@ const LineChart = ({ data = [], dimensions = {} }) => {
       }
     }
 
+    /**
+     * Update the darkest colorred background's width with the selected day
+     * @function
+     * @memberof LineChart
+     * @param {number} x - The x current position in pixels for the day selected
+     */
+    function updateDarkestBackgroundWidth(x) {
+      const bgPath = d3.select('#background-day-selected-change')
+      bgPath
+        .attr('d', function () {
+          return svgRoundedRectanglePath(
+            x + 1.5,
+            0,
+            svgWidth - x - 1.5,
+            svgHeight,
+            5,
+            {
+              tl: x < 0 ? 1 : 0,
+              tr: 1,
+              br: 1,
+              bl: x < 0 ? 1 : 0,
+            }
+          )
+        })
+        .attr('opacity', x > svgWidth ? 0 : 1)
+        .merge(bgPath)
+    }
+
+    /**
+     * The mouse's listener to position the tooltip with the darkest background
+     * @function
+     * @memberof LineChart
+     * @param {object} event - The mouse event
+     */
     function mousemove(event) {
+      console.log(typeof event)
+      // Tooltip
       var x0 = xScaleText.invert(d3.pointer(event)[0]),
         i = bisectDate(data[0].items, x0),
         d = data[0].items[i]
-
-      console.log('i:' + i)
-      console.log('*->' + JSON.stringify(d))
-      console.log(
-        'x=' + xScaleText(d.day) + '   -   y=' + yScale(d.sessionLength)
-      )
-      tooltip.attr(
-        'transform',
-        'translate(' + xScale(d.day) + ',' + yScale(d.sessionLength) + ')'
-      )
-
-      updateTooltipValue(i, d)
+      const x = xScale(d.day)
+      const y = yScale(d.sessionLength)
+      tooltip.attr('transform', 'translate(' + x + ',' + y + ')')
+      updateTooltipValue(i, d.sessionLength)
+      // Darkest background
+      updateDarkestBackgroundWidth(x)
     }
-  }, [data, height, margin.bottom, margin.left, margin.top, width]) // Redraw chart if data or size changes
+  }, [
+    data,
+    height,
+    margin.bottom,
+    margin.left,
+    margin.top,
+    svgHeight,
+    svgWidth,
+    width,
+  ]) // Redraw chart if data or size changes
 
   return <svg ref={svgRef} width={svgWidth} height={svgHeight} />
 }

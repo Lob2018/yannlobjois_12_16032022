@@ -1,6 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import Logo from '../../assets/logo.svg'
+import logo from '../../assets/logo.svg'
 import colors from '../../style/colors'
 
 const StyledHeaderLogo = styled.img`
@@ -46,7 +46,7 @@ function Header() {
   return (
     <HeaderContainer>
       <StyledLogoLink to="/">
-        <StyledHeaderLogo src={Logo} alt="Logo SportSee" />
+        <StyledHeaderLogo src={logo} alt="Logo SportSee" />
       </StyledLogoLink>
       <StyledNav aria-label="Navigation principale">
         <StyledUL role="menubar" aria-label="Navigation principale">
