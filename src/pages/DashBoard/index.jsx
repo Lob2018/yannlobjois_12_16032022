@@ -1,9 +1,12 @@
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useContext } from 'react'
+import * as d3 from 'd3'
+
 import colors from '../../style/colors'
 
 import LineChart from '../../components/Charts/LineChart'
+import RadarBarChart from '../../components/Charts/RadarBarChart'
 import { useService } from '../../service/useService'
 import { useWindowWidth } from '../../utils/helper/useWindowWidth'
 import { MockedContext } from '../../context'
@@ -117,8 +120,6 @@ function DashBoard() {
 
   const { userData } = useService(id, isMocked)
 
-  console.log(userData.getAverageData())
-
   return (
     <DashBoardContainer>
       <Aside />
@@ -142,6 +143,25 @@ function DashBoard() {
                       name: 'SessionsAverage',
                       color: '#ffffff',
                       items: userData.getAverageData(),
+                    },
+                  ]}
+                  dimensions={{
+                    width:
+                      windowWidth < 1280
+                        ? windowWidth * 0.22
+                        : windowWidth * 0.179,
+                    height: 218,
+                    margin: { top: 30, right: 0, bottom: 15, left: 0 },
+                  }}
+                />
+              )}
+              {userData.getPerformanceData() && (
+                <RadarBarChart
+                  data={[
+                    {
+                      name: 'UserPerformances',
+                      color: '#ffffff',
+                      items: userData.getPerformanceData(),
                     },
                   ]}
                   dimensions={{

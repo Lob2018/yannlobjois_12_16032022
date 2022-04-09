@@ -12,10 +12,8 @@ export function getMinMaxObjectValueOfObjectInArray(
 ) {
   return objectArray.reduce(function (prev, curr) {
     if (minOrMax === -1) {
-      console.log('in')
       return prev[key] < curr[key] ? prev : curr
     } else {
-      console.log('out')
       return prev[key] > curr[key] ? prev : curr
     }
   })[key]
