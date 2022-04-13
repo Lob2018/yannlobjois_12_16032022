@@ -23,15 +23,14 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
     // center = The middle of our drawing area.
 
     const NUM_OF_SIDES = 6
-    const NUM_OF_LEVEL = 5,
-      size = Math.min(svgWidth, svgHeight),
+    const size = Math.min(svgWidth, svgHeight),
       offset = Math.PI,
       polyangle = (Math.PI * 2) / NUM_OF_SIDES,
-      r = 0.6 * size,
+      r = svgWidth < 235 ? 0.62 * size : 0.7 * size,
       r_0 = r / 2,
       center = {
         x: svgWidth / 2,
-        y: (height - 6) / 2,
+        y: (height - 15) / 2,
       }
 
     // Get the maximum value to calculate the percentage
@@ -65,7 +64,7 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
     const dataset = getDataUpdated(NUM_OF_SIDES)
     const scale = d3.scaleLinear().domain([0, 100]).range([0, r_0]).nice()
 
-    generateAndDrawLevels(NUM_OF_LEVEL, NUM_OF_SIDES)
+    generateAndDrawLevels(NUM_OF_SIDES)
     drawData(dataset, NUM_OF_SIDES)
     drawLabels(dataset, NUM_OF_SIDES)
 
@@ -78,10 +77,20 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
      */
     function getDataUpdated(length) {
       const dataUpdated = []
+      const translatedText = [
+        'cardio',
+        'energie',
+        'endurance',
+        'force',
+        'vitesse',
+        'intensité',
+      ]
       for (let i = 0; i < length; i++) {
         const text = data[0].items.performance_kind[i + 1]
         dataUpdated.unshift({
-          name: text.charAt(0).toUpperCase() + text.slice(1),
+          name:
+            translatedText[i].charAt(0).toUpperCase() +
+            translatedText[i].slice(1),
           value: (data[0].items.performance_data[i].value / calcMax) * 100,
         })
       }
@@ -118,16 +127,15 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
     }
 
     /**
-     * Draws the levels in SVG
+     * Draws the levels in SVG (5 levels)
      * @function
      * @memberof RadarBarChart
      * @param {*} levelsCount - The number of levels
      * @param {*} sideCount - The number of sides
      */
-    function generateAndDrawLevels(levelsCount, sideCount) {
-      for (let level = 1; level <= levelsCount; level++) {
-        const hyp = (level / levelsCount) * r_0
-
+    function generateAndDrawLevels(sideCount) {
+      for (let level = 0.125; level <= 1; level *= 2) {
+        let hyp = level * r_0
         const points = []
         for (let vertex = 0; vertex < sideCount; vertex++) {
           const theta = vertex * polyangle
@@ -140,8 +148,8 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
           .style('stroke', '#FFF')
           .style('stroke-width', '1')
           .style('fill-opacity', '0')
-
         drawPath([...points, points[0]], group)
+        if (level === 1) level = 0.375
       }
     }
 
@@ -203,8 +211,19 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
       for (let vertex = 0; vertex < sideCount; vertex++) {
         const angle = vertex * polyangle
         const label = dataset1[vertex].name
-        const point = generatePoint({ length: 0.415 * size, angle })
-
+        let optimizedLength = 0.47
+        if (vertex === 0) {
+          optimizedLength = optimizedLength / 1.14
+        } else if (vertex === 3) {
+          optimizedLength = optimizedLength / 1.08
+        }
+        optimizedLength =
+          svgWidth < 235 ? optimizedLength * 0.93 : optimizedLength * 0.985
+        const point = generatePoint({ length: optimizedLength * size, angle })
+        if (vertex === 1) point.y = point.y + 18
+        if (vertex === 2 || vertex === 4) point.y = point.y - 3.5
+        if (vertex === 2) point.x = point.x - 5
+        if (vertex === 5) point.y = point.y + 18
         drawText(label, point, groupL)
       }
     }
