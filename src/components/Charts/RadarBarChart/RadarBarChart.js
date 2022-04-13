@@ -159,7 +159,7 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
         .attr('x', point.x)
         .attr('y', point.y)
         .attr('font-weight', '500')
-        .html(text)
+        .text(text)
         .style('text-anchor', 'middle')
         .attr('fill', 'white')
         .style('font-size', '12px')
