@@ -1,17 +1,20 @@
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useContext } from 'react'
-import * as d3 from 'd3'
 
 import colors from '../../style/colors'
-
+import Aside from '../../components/Aside'
 import LineChart from '../../components/Charts/LineChart'
 import RadarBarChart from '../../components/Charts/RadarBarChart'
 import { useService } from '../../service/useService'
 import { useWindowWidth } from '../../utils/helper/useWindowWidth'
 import { MockedContext } from '../../context'
+import Card from '../../components/Card/index.jsx'
 
-import Aside from '../../components/Aside'
+import Calories from '../../assets/calories.svg'
+import Proteines from '../../assets/protein.svg'
+import Glucides from '../../assets/carbs.svg'
+import Lipides from '../../assets/fat.svg'
 
 const DashBoardContainer = styled.div`
   width: 100%;
@@ -96,16 +99,6 @@ const SecondaryChartsContainer = styled.div`
     width: 100%;
   }
 `
-const StyledCard = styled.div`
-  margin: 0px;
-  width: 100%;
-  height: 124px;
-  border-radius: 5px;
-  background-color: ${colors.bgCards};
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0212249);
-  @media only screen and (max-width: 768px) {
-  }
-`
 
 /**
  * DashBoard page component
@@ -177,8 +170,34 @@ function DashBoard() {
             </SecondChartsContainer>
           </MainChartsContainer>
           <SecondaryChartsContainer>
-            <StyledCard></StyledCard> <StyledCard></StyledCard>{' '}
-            <StyledCard></StyledCard> <StyledCard></StyledCard>
+            {userData.getMainData() && (
+              <>
+                <Card
+                  label="Calories"
+                  icon={Calories}
+                  value={userData.getMainData().calorieCount}
+                  unit="Cal"
+                />
+                <Card
+                  label="Protéines"
+                  icon={Proteines}
+                  value={userData.getMainData().proteinCount}
+                  unit="g"
+                />
+                <Card
+                  label="Glucides"
+                  icon={Glucides}
+                  value={userData.getMainData().carbohydrateCount}
+                  unit="g"
+                />
+                <Card
+                  label="Lipides"
+                  icon={Lipides}
+                  value={userData.getMainData().lipidCount}
+                  unit="g"
+                />
+              </>
+            )}
           </SecondaryChartsContainer>
         </StyledChartsContainer>
       </StyledMain>
