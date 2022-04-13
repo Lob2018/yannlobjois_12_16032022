@@ -6,6 +6,7 @@ import colors from '../../style/colors'
 import Aside from '../../components/Aside'
 import LineChart from '../../components/Charts/LineChart'
 import RadarBarChart from '../../components/Charts/RadarBarChart'
+import RadialBarChart from '../../components/Charts/RadialBarChart'
 import { useService } from '../../service/useService'
 import { useWindowWidth } from '../../utils/helper/useWindowWidth'
 import { MockedContext } from '../../context'
@@ -96,6 +97,7 @@ const SecondaryChartsContainer = styled.div`
   gap: 39px;
   @media only screen and (max-width: 1280px) {
     flex-direction: row;
+    gap: 0px;
     width: 100%;
   }
 `
@@ -155,6 +157,27 @@ function DashBoard() {
                       name: 'UserPerformances',
                       color: '#ffffff',
                       items: userData.getPerformanceData(),
+                    },
+                  ]}
+                  dimensions={{
+                    width:
+                      windowWidth < 1280
+                        ? windowWidth * 0.22
+                        : windowWidth * 0.179,
+                    height: 218,
+                    margin: { top: 30, right: 0, bottom: 15, left: 0 },
+                  }}
+                />
+              )}
+              {userData.getMainData() && (
+                <RadialBarChart
+                  data={[
+                    {
+                      name: 'Score',
+                      color: '#ffffff',
+                      items:
+                        userData.getMainData().todayScore ||
+                        userData.getMainData().score,
                     },
                   ]}
                   dimensions={{

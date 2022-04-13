@@ -10,11 +10,14 @@ const CardContainer = styled.div`
   gap:24px;
   margin:0px;
   width: 100%;
+  min-width:170px;
   height: 124px;
   border-radius: 5px;
   background-color: ${colors.bgCards};
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0212249);
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 1280px) {
+    height: 108px;
+    gap:12px;    
   }
 `
 
@@ -23,7 +26,8 @@ const StyledCardIcon = styled.img`
   width: 60px;
   height: 60px;
   margin-left: 32px;
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 1280px) {
+    margin-left: 24px;
   }
 `
 
@@ -37,18 +41,18 @@ const StyledCardText = styled.p`
     font-weight: 700;
     font-size: 20px;
     line-height: 24px;
+    @media only screen and (max-width: 1280px) {
+      font-size: 16px;
+    }
   }
   span:nth-of-type(2) {
     color: ${colors.strCardsLegend};
     font-weight: 500;
     font-size: 14px;
     line-height: 24px;
-  }
-  @media only screen and (max-width: 768px) {
-    width: 335px;
-    height: 255px;
-    min-width: 100%;
-    min-height: 100%;
+    @media only screen and (max-width: 1280px) {
+      font-size: 14px;
+    }
   }
 `
 
