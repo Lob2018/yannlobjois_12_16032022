@@ -97,8 +97,15 @@ const SecondaryChartsContainer = styled.div`
   gap: 39px;
   @media only screen and (max-width: 1280px) {
     flex-direction: row;
+    justify-content: space-between;
     gap: 0px;
     width: 100%;
+    div:first-child {
+      padding-left: 24px;
+    }
+    div:last-child {
+      padding-right: 24px;
+    }
   }
 `
 

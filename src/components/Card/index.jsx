@@ -9,8 +9,6 @@ const CardContainer = styled.div`
   align-items: center;
   gap:24px;
   margin:0px;
-  width: 100%;
-  min-width:170px;
   height: 124px;
   border-radius: 5px;
   background-color: ${colors.bgCards};
@@ -27,7 +25,7 @@ const StyledCardIcon = styled.img`
   height: 60px;
   margin-left: 32px;
   @media only screen and (max-width: 1280px) {
-    margin-left: 24px;
+    margin-left: 0px;
   }
 `
 
