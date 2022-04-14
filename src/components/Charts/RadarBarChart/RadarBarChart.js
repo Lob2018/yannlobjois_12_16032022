@@ -26,10 +26,10 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
     const size = Math.min(svgWidth, svgHeight),
       offset = Math.PI,
       polyangle = (Math.PI * 2) / NUM_OF_SIDES,
-      r = svgWidth < 235 ? 0.62 * size : 0.7 * size,
+      r = 0.615 * size,
       r_0 = r / 2,
       center = {
-        x: svgWidth / 2,
+        x: svgWidth < 256 ? (svgWidth - 7) / 2 : svgWidth / 2,
         y: (height - 15) / 2,
       }
 
@@ -217,8 +217,7 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
         } else if (vertex === 3) {
           optimizedLength = optimizedLength / 1.08
         }
-        optimizedLength =
-          svgWidth < 235 ? optimizedLength * 0.93 : optimizedLength * 0.985
+        optimizedLength = optimizedLength * 0.92
         const point = generatePoint({ length: optimizedLength * size, angle })
         if (vertex === 1) point.y = point.y + 18
         if (vertex === 2 || vertex === 4) point.y = point.y - 3.5
