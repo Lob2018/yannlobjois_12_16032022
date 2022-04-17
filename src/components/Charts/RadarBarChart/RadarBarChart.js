@@ -29,7 +29,7 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
       r = 0.615 * size,
       r_0 = r / 2,
       center = {
-        x: svgWidth < 256 ? (svgWidth - 7) / 2 : svgWidth / 2,
+        x: svgWidth < 270 ? (svgWidth - 3) / 2 : svgWidth / 2,
         y: (height - 15) / 2,
       }
 

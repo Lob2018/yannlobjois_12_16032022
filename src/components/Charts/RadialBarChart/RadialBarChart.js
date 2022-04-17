@@ -25,26 +25,6 @@ const RadialBarChart = ({ data = [], dimensions = {} }) => {
         'translate(' + svgWidth / 2 + ',' + svgHeight / 2 + ')'
       )
 
-    // // complete clockwise version
-    // var value = Math.PI * 2 - Math.PI * 2 * data[0].items
-    // var arc = d3
-    //   .arc()
-    //   .cornerRadius(25)
-    //   .innerRadius(radius / 2.55)
-    //   .outerRadius(radius / 2.3)
-    //   .startAngle(0)
-    //   .endAngle(value)
-
-    // // complete counterclockwise version
-    // var value = -(Math.PI * 2 - Math.PI * 2 * data[0].items)
-    // var arc = d3
-    //   .arc()
-    //   .cornerRadius(25)
-    //   .innerRadius(radius / 2.55)
-    //   .outerRadius(radius / 2.3)
-    //   .startAngle(value)
-    //   .endAngle(0)
-
     // rest of counterclockwise version
     var value = -Math.PI * 2 * data[0].items
     var arc = d3

@@ -4,6 +4,7 @@ import { useContext } from 'react'
 
 import colors from '../../style/colors'
 import Aside from '../../components/Aside'
+import BarChart from '../../components/Charts/BarChart'
 import LineChart from '../../components/Charts/LineChart'
 import RadarBarChart from '../../components/Charts/RadarBarChart'
 import RadialBarChart from '../../components/Charts/RadialBarChart'
@@ -27,6 +28,9 @@ const DashBoardContainer = styled.div`
 const StyledMain = styled.main`
   margin: 68px 90px 31px 107px;
   width: calc(100% - 107px);
+  @media only screen and (max-width: 1280px) {
+    margin: 68px 50px 31px 50px;
+  }
 `
 const StyledChartsContainer = styled.div`
   display: flex;
@@ -84,9 +88,7 @@ const SecondChartsContainer = styled.div`
   gap: 3.59%;
   width: 100%;
   height: 263px;
-  //border-radius: 5px;
   background-color: ${colors.bgCards};
-  //background-color: red;
 `
 
 const SecondaryChartsContainer = styled.div`
@@ -136,7 +138,29 @@ function DashBoard() {
         </StyledSubTitle>
         <StyledChartsContainer>
           <MainChartsContainer>
-            <FirstChartContainer></FirstChartContainer>
+            <FirstChartContainer>
+              {userData.getActivityData() && (
+                <BarChart
+                  data={[
+                    {
+                      name: 'ActivityData',
+                      color: '#ffffff',
+                      items: userData.getActivityData().map((d, i) => ({
+                        ...d,
+                        day: i + 1,
+                      })),
+                    },
+                  ]}
+                  dimensions={{
+                    width:
+                      windowWidth < 1280
+                        ? windowWidth * 0.788
+                        : windowWidth * 0.57986,
+                    height: 320,
+                  }}
+                />
+              )}
+            </FirstChartContainer>
             <SecondChartsContainer>
               {userData.getAverageData() && (
                 <LineChart
@@ -150,7 +174,7 @@ function DashBoard() {
                   dimensions={{
                     width:
                       windowWidth < 1280
-                        ? windowWidth * 0.22
+                        ? windowWidth * 0.235
                         : windowWidth * 0.179,
                     height: 218,
                     margin: { top: 30, right: 0, bottom: 15, left: 0 },
@@ -169,7 +193,7 @@ function DashBoard() {
                   dimensions={{
                     width:
                       windowWidth < 1280
-                        ? windowWidth * 0.22
+                        ? windowWidth * 0.235
                         : windowWidth * 0.179,
                     height: 218,
                     margin: { top: 30, right: 0, bottom: 15, left: 0 },
@@ -190,7 +214,7 @@ function DashBoard() {
                   dimensions={{
                     width:
                       windowWidth < 1280
-                        ? windowWidth * 0.22
+                        ? windowWidth * 0.235
                         : windowWidth * 0.179,
                     height: 218,
                     margin: { top: 30, right: 0, bottom: 15, left: 0 },
