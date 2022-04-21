@@ -191,7 +191,6 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       .data(binsPoids)
       .join('path')
       .each(function (el, i) {
-        console.log(el)
         if (el.length > 0) {
           d3.select(this).attr('d', () =>
             svgRoundedRectanglePath(
@@ -225,7 +224,6 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       .data(binsCal)
       .join('path')
       .each(function (el, i) {
-        console.log(el)
         if (el.length > 0) {
           d3.select(this).attr('d', () =>
             svgRoundedRectanglePath(
