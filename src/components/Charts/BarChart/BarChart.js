@@ -34,8 +34,8 @@ const BarChart = ({ data = [], dimensions = {} }) => {
     // Display rendering with max+1 and min-1
     yDomainPoids = [yDomainPoids[0] - 1, yDomainPoids[1] + 1]
 
-    const ChartHeight = height * 0.5813
-    const ChartWidth = width * 0.9132
+    const chartHeight = height * 0.5813
+    const chartWidth = width * 0.9132
     const chartMarginLeft = width * 0.0515
     const chartMarginRight = width * 0.0357
     const chartMarginTop = height * 0.1138
@@ -43,15 +43,20 @@ const BarChart = ({ data = [], dimensions = {} }) => {
 
     const xRangeBarsOptmized = [
       chartMarginLeft,
-      ChartWidth - chartMarginRight - width * 0.0287,
+      chartWidth - chartMarginRight - width * 0.0287,
     ]
 
     const xRangeTextOptmized = [
       chartMarginLeft + width * 0.01437,
-      ChartWidth - chartMarginRight - width * 0.01437,
+      chartWidth - chartMarginRight - width * 0.01437,
     ]
 
-    const yRange = [ChartHeight - chartMarginBottom, chartMarginTop]
+    const xRange = [
+      chartMarginLeft,
+      chartWidth - chartMarginRight + width * 0.01437,
+    ]
+
+    const yRange = [chartHeight - chartMarginBottom, chartMarginTop]
 
     const XPoids = d3.map(data[0].items, (d) => d.day)
     const XCal = d3.map(data[0].items, (d) => d.day + 0.2)
@@ -79,8 +84,13 @@ const BarChart = ({ data = [], dimensions = {} }) => {
     const xScaleText = d3.scaleLinear(xDomain, xRangeTextOptmized)
     const xScaleWeight = d3.scaleLinear(xDomain, xRangeBarsOptmized)
     const xScaleCal = d3.scaleLinear(xDomain, xRangeBarsOptmized)
+    const xScale = d3.scaleLinear(xDomain, xRange)
     const yScale = d3.scaleLinear(yDomainPoids, yRange)
     const xAxis = d3
+      .axisBottom(xScale)
+      .ticks(data[0].items.length - 1, xFormat)
+      .tickSizeOuter(0)
+    const xAxisText = d3
       .axisBottom(xScaleText)
       .ticks(data[0].items.length - 1, xFormat)
       .tickSizeOuter(0)
@@ -166,7 +176,7 @@ const BarChart = ({ data = [], dimensions = {} }) => {
           .selectAll('.tick line')
           .attr(
             'x2',
-            ChartWidth -
+            chartWidth -
               chartMarginLeft -
               chartMarginRight +
               thresholds / data[0].items.length
@@ -177,7 +187,7 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       .call((g) =>
         g
           .selectAll('.tick text')
-          .attr('transform', `translate(${ChartWidth},0)`)
+          .attr('transform', `translate(${chartWidth},0)`)
           .attr('fill', '  #9B9EAC')
           .attr('font-weight', '500')
           .style('font-size', '14px')
@@ -195,13 +205,13 @@ const BarChart = ({ data = [], dimensions = {} }) => {
           d3.select(this).attr('d', () =>
             svgRoundedRectanglePath(
               Math.round(xScaleWeight(el.x0)),
-              Math.round(yScale(YPoids[i])),
+              yScale(YPoids[i]),
               Math.round(
                 Math.max(0, xScaleWeight(el.x1) - xScaleWeight(el.x0))
               ),
-              ChartHeight - chartMarginBottom - yScale(YPoids[i]) > 0
+              chartHeight - chartMarginBottom - yScale(YPoids[i]) > 0
                 ? Math.round(
-                    ChartHeight - chartMarginBottom - yScale(YPoids[i])
+                    chartHeight - chartMarginBottom - yScale(YPoids[i])
                   )
                 : 0,
               width * 0.006,
@@ -228,10 +238,10 @@ const BarChart = ({ data = [], dimensions = {} }) => {
           d3.select(this).attr('d', () =>
             svgRoundedRectanglePath(
               Math.round(xScaleCal(el.x0)),
-              Math.round(yScale(YCal[i])),
+              yScale(YCal[i]),
               Math.round(Math.max(0, xScaleCal(el.x1) - xScaleCal(el.x0))),
-              ChartHeight - chartMarginBottom - yScale(YCal[i]) > 0
-                ? Math.round(ChartHeight - chartMarginBottom - yScale(YCal[i]))
+              chartHeight - chartMarginBottom - yScale(YCal[i]) > 0
+                ? Math.round(chartHeight - chartMarginBottom - yScale(YCal[i]))
                 : 0,
               width * 0.006,
               {
@@ -245,12 +255,12 @@ const BarChart = ({ data = [], dimensions = {} }) => {
         } else d3.select(this).remove()
       })
 
-    // x text
+    // x for text
     svgChart
       .append('g')
-      .attr('transform', `translate(0,${ChartHeight - chartMarginBottom})`)
-      .call(xAxis)
-      .call((g) => g.select('.domain').attr('stroke', '#DEDEDE'))
+      .attr('transform', `translate(0,${chartHeight - chartMarginBottom})`)
+      .call(xAxisText)
+      .call((g) => g.select('.domain').attr('opacity', 0))
       .call((g) => g.selectAll('.tick line').attr('y2', 0))
       .call((g) =>
         g
@@ -263,6 +273,15 @@ const BarChart = ({ data = [], dimensions = {} }) => {
           .attr('font-weight', '500')
           .style('font-size', '14px')
       )
+
+    // x for domain line
+    svgChart
+      .append('g')
+      .attr('transform', `translate(0,${chartHeight - chartMarginBottom})`)
+      .call(xAxis)
+      .call((g) => g.select('.domain').attr('stroke', '#DEDEDE'))
+      .call((g) => g.selectAll('.tick line').attr('y2', 0))
+      .call((g) => g.selectAll('.tick text').attr('opacity', 0))
   }, [data, height, width]) // Redraw chart if data or size changes
 
   return <svg ref={svgRef} width={width} height={height} />
