@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 
+import { svgRoundedRectanglePath } from '../../../utils/helper/svgRoundedRectanglePath'
 import { getMinMaxObjectValueOfObjectInArray } from '../../../utils/helper/getMinMaxObjectValueOfObjectInArray'
 
 const BarChart = ({ data = [], dimensions = {} }) => {
@@ -97,16 +98,15 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       .attr('width', width)
       .attr('height', height)
       .attr('id', 'legend')
-    // title
-    svgLegend
-      .append('text')
-      .attr('x', width * 0.0383)
-      .attr('y', height * 0.125)
-      .style('fill', '#20253A')
-      .style('font-family', 'Roboto')
-      .style('font-weight', '500')
-      .style('font-size', '15px')
-      .text('Activité quotidienne')
+    // the title
+    svgTextLegend(
+      svgLegend,
+      width * 0.0383,
+      height * 0.125,
+      '#20253A',
+      'Activité quotidienne'
+    )
+
     // bullets
     svgLegend
       .append('circle')
@@ -120,25 +120,33 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       .style('fill', '#E60000')
       .attr('cx', width * 0.7737 + width * 0.004790419)
       .attr('cy', height * 0.125 - width * 0.004790419)
-    // bullet's legend
-    svgLegend
-      .append('text')
-      .attr('x', width * 0.6587)
-      .attr('y', height * 0.125)
-      .style('fill', '#74798C')
-      .style('font-family', 'Roboto')
-      .style('font-weight', '500')
-      .style('font-size', '15px')
-      .text('Poids (kg)')
-    svgLegend
-      .append('text')
-      .attr('x', width * 0.7976)
-      .attr('y', height * 0.125)
-      .style('fill', '#74798C')
-      .style('font-family', 'Roboto')
-      .style('font-weight', '500')
-      .style('font-size', '15px')
-      .text('Calories brûlées (kCal)')
+    // bullet's legends
+    svgTextLegend(
+      svgLegend,
+      width * 0.6587,
+      height * 0.125,
+      '#74798C',
+      'Poids (kg)'
+    )
+    svgTextLegend(
+      svgLegend,
+      width * 0.7976,
+      height * 0.125,
+      '#74798C',
+      'Calories brûlées (kCal)'
+    )
+
+    function svgTextLegend(svgGroup, x, y, filledColor, text) {
+      svgGroup
+        .append('text')
+        .attr('x', x)
+        .attr('y', y)
+        .style('fill', filledColor)
+        .style('font-family', 'Roboto')
+        .style('font-weight', '500')
+        .style('font-size', '15px')
+        .text(text)
+    }
 
     // the charts's svg
     const svgChart = svgEl
@@ -176,9 +184,7 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       )
 
     // weight bars
-    svgChart
-      .append('g')
-      .attr('fill', '#282D30')
+    const weightBars = svgChart
       .selectAll('rect')
       .data(binsPoids)
       .join('rect')
@@ -192,11 +198,15 @@ const BarChart = ({ data = [], dimensions = {} }) => {
           ? ChartHeight - chartMarginBottom - yScale(YPoids[i])
           : 0
       )
+    updateBarsWithTopRounded(
+      weightBars,
+      svgChart.append('g').attr('id', 'weightBars'),
+      '#282D30',
+      width * 0.006
+    )
 
     // cal bars
-    svgChart
-      .append('g')
-      .attr('fill', '#E60000')
+    const calBars = svgChart
       .selectAll('rect')
       .data(binsCal)
       .join('rect')
@@ -208,6 +218,45 @@ const BarChart = ({ data = [], dimensions = {} }) => {
           ? ChartHeight - chartMarginBottom - yScale(YCal[i])
           : 0
       )
+
+    updateBarsWithTopRounded(
+      calBars,
+      svgChart.append('g').attr('id', 'calBars'),
+      '#E60000',
+      width * 0.006
+    )
+
+    /**
+     * Replaces a rectangle SVG group with a path SVG group corresponding to the rounded top borders
+     * @param {object} oldGroupSVG - The old SVG group of rectangle
+     * @param {object} newGroupSVG - The new SVG group of path
+     * @param {string} color - The color of the path
+     * @param {number} radius - The border radius
+     */
+    function updateBarsWithTopRounded(oldGroupSVG, newGroupSVG, color, radius) {
+      oldGroupSVG._groups[0].forEach((el) => {
+        if (el.attributes[3].value > 0) {
+          const y = el.attributes[2].value
+          const w = Math.round(el.attributes[1].value)
+          const x = Math.round(el.attributes[0].value + 2 * w)
+          const h = Math.round(el.attributes[3].value)
+          newGroupSVG
+            .append('path')
+            .attr('d', () =>
+              svgRoundedRectanglePath(x, y, w, h, radius, {
+                tl: 1,
+                tr: 1,
+                br: 0,
+                bl: 0,
+              })
+            )
+            .attr('fill', color)
+            .merge(newGroupSVG)
+        }
+      })
+      // remove unused bars
+      oldGroupSVG.remove()
+    }
 
     // x text
     svgChart
