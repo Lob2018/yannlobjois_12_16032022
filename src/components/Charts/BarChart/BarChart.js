@@ -184,79 +184,68 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       )
 
     // weight bars
-    const weightBars = svgChart
-      .selectAll('rect')
+    svgChart
+      .append('g')
+      .attr('fill', '#282D30')
+      .selectAll('path')
       .data(binsPoids)
-      .join('rect')
-      .attr('x', (d) => xScaleWeight(d.x0))
-      .attr('width', (d) =>
-        Math.max(0, xScaleWeight(d.x1) - xScaleWeight(d.x0))
-      )
-      .attr('y', (d, i) => yScale(YPoids[i]))
-      .attr('height', (d, i) =>
-        ChartHeight - chartMarginBottom - yScale(YPoids[i]) > 0
-          ? ChartHeight - chartMarginBottom - yScale(YPoids[i])
-          : 0
-      )
-    updateBarsWithTopRounded(
-      weightBars,
-      svgChart.append('g').attr('id', 'weightBars'),
-      '#282D30',
-      width * 0.006
-    )
-
-    // cal bars
-    const calBars = svgChart
-      .selectAll('rect')
-      .data(binsCal)
-      .join('rect')
-      .attr('x', (d) => xScaleCal(d.x0))
-      .attr('width', (d) => Math.max(0, xScaleCal(d.x1) - xScaleCal(d.x0)))
-      .attr('y', (d, i) => yScale(YCal[i]))
-      .attr('height', (d, i) =>
-        ChartHeight - chartMarginBottom - yScale(YCal[i]) > 0
-          ? ChartHeight - chartMarginBottom - yScale(YCal[i])
-          : 0
-      )
-
-    updateBarsWithTopRounded(
-      calBars,
-      svgChart.append('g').attr('id', 'calBars'),
-      '#E60000',
-      width * 0.006
-    )
-
-    /**
-     * Replaces a rectangle SVG group with a path SVG group corresponding to the rounded top borders
-     * @param {object} oldGroupSVG - The old SVG group of rectangle
-     * @param {object} newGroupSVG - The new SVG group of path
-     * @param {string} color - The color of the path
-     * @param {number} radius - The border radius
-     */
-    function updateBarsWithTopRounded(oldGroupSVG, newGroupSVG, color, radius) {
-      oldGroupSVG._groups[0].forEach((el) => {
-        if (el.attributes[3].value > 0) {
-          const y = el.attributes[2].value
-          const w = Math.round(el.attributes[1].value)
-          const x = Math.round(el.attributes[0].value + 2 * w)
-          const h = Math.round(el.attributes[3].value)
-          newGroupSVG
-            .append('path')
-            .attr('d', () =>
-              svgRoundedRectanglePath(x, y, w, h, radius, {
+      .join('path')
+      .each(function (el, i) {
+        console.log(el)
+        if (el.length > 0) {
+          d3.select(this).attr('d', () =>
+            svgRoundedRectanglePath(
+              Math.round(xScaleWeight(el.x0)),
+              Math.round(yScale(YPoids[i])),
+              Math.round(
+                Math.max(0, xScaleWeight(el.x1) - xScaleWeight(el.x0))
+              ),
+              ChartHeight - chartMarginBottom - yScale(YPoids[i]) > 0
+                ? Math.round(
+                    ChartHeight - chartMarginBottom - yScale(YPoids[i])
+                  )
+                : 0,
+              width * 0.006,
+              {
                 tl: 1,
                 tr: 1,
                 br: 0,
                 bl: 0,
-              })
+              }
             )
-            .attr('fill', color)
-            .merge(newGroupSVG)
-        }
+          )
+        } else d3.select(this).remove()
       })
-      // remove unused bars
-      oldGroupSVG.remove()
-    }
+
+    // cal bars
+    svgChart
+      .append('g')
+      .attr('fill', '#E60000')
+      .selectAll('path')
+      .data(binsCal)
+      .join('path')
+      .each(function (el, i) {
+        console.log(el)
+        if (el.length > 0) {
+          d3.select(this).attr('d', () =>
+            svgRoundedRectanglePath(
+              Math.round(xScaleCal(el.x0)),
+              Math.round(yScale(YCal[i])),
+              Math.round(Math.max(0, xScaleCal(el.x1) - xScaleCal(el.x0))),
+              ChartHeight - chartMarginBottom - yScale(YCal[i]) > 0
+                ? Math.round(ChartHeight - chartMarginBottom - yScale(YCal[i]))
+                : 0,
+              width * 0.006,
+              {
+                tl: 1,
+                tr: 1,
+                br: 0,
+                bl: 0,
+              }
+            )
+          )
+        } else d3.select(this).remove()
+      })
 
     // x text
     svgChart
