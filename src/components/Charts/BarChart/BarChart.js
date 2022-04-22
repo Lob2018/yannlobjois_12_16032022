@@ -106,19 +106,12 @@ const BarChart = ({ data = [], dimensions = {} }) => {
     svgEl
       .append('path')
       .attr('d', function (d) {
-        return svgRoundedRectanglePath(
-          0,
-          0,
-          chartWidth - chartMarginLeft - chartMarginRight,
-          chartHeight - chartMarginBottom - chartMarginTop,
-          0,
-          {
-            tl: 0,
-            tr: 0,
-            br: 0,
-            bl: 0,
-          }
-        )
+        return svgRoundedRectanglePath(0, 0, 0, 0, 0, {
+          tl: 0,
+          tr: 0,
+          br: 0,
+          bl: 0,
+        })
       })
       .attr('transform', `translate(-${chartMarginLeft},${chartMarginTop})`)
       .attr('id', 'background-activity-day-selected-change')
@@ -306,10 +299,7 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       .call((g) => g.selectAll('.tick line').attr('y2', 0))
       .call((g) => g.selectAll('.tick text').attr('opacity', 0))
 
-    /**
-     * TOOLTIP
-     */
-    // Draws the tooltip and a mouse listener
+    // TOOLTIP - Draws the tooltip with a mouse listener
     var tooltip = addTooltip()
     var bisectDate = d3.bisector((d) => d.day).center
     svgChart
@@ -328,13 +318,14 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       .on('mousemove', mousemove)
 
     /**
-     * Create the tooltip (with the circle for the value position)
+     * Create the tooltip
      * @function
-     * @memberof LineChart
+     * @memberof BarChart
      * @returns {object} - The svg of the tooltip
      */
     function addTooltip() {
-      // Creating a group that will contain the entire tooltip plus the tracking circle
+      var tooltipHeight = (chartHeight - chartMarginTop - 8) / 2
+      // Creating a group that will contain the entire tooltip
       var tooltipGroup = svgChart
         .append('g')
         .attr('id', 'tooltip')
@@ -343,75 +334,64 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       tooltipGroup
         .append('rect')
         .attr('width', 39)
-        .attr('height', 25)
-        .style('fill', '#FFF')
-        .style('stroke', '#FFF')
-        .style('stroke-width', '1')
-        .attr('transform', 'translate(-19.5, 0)')
+        .attr('height', tooltipHeight)
+        .style('fill', '#E60000')
+        .attr('transform', 'translate(0, 0)')
         .attr('id', 'tooltip-container-weight-calorie')
       // Draw the text container
       var text = tooltipGroup
         .append('text')
         .attr('font-size', '8px')
         .attr('font-weight', '500')
-        .style('color', '#000')
         .attr('text-anchor', 'middle')
-        .style('fill', '#000')
+        .style('fill', '#FFF')
         .attr('transform', 'translate(0, 0)')
         .attr('id', 'tooltip-text-container-weight-calorie')
-      // Draw the text for the average session value found
+        .attr('width', 39)
+        .attr('height', 63)
+      // Draw the text for the weight
       text
         .append('tspan')
-        .attr('id', 'tooltip-text-weight-calorie')
+        .attr('id', 'tooltip-text-weight')
         .style('font-weight', 'bold')
+        .attr('x', '19.5')
+        .attr('dy', tooltipHeight * 0.25 + 4)
+      // Draw the text for the calories
+      text
+        .append('tspan')
+        .attr('id', 'tooltip-text-calorie')
+        .style('font-weight', 'bold')
+        .attr('x', '19.5')
+        .attr('dy', tooltipHeight * 0.5 - 4)
       return tooltipGroup
     }
 
     /**
-     * Update the tooltip text position for the first and the last values
+     * Update the tooltip text position
      * @function
-     * @memberof LineChart
-     * @param {number} i - The x axis day (0-6)
-     * @param {string} sessionLengthValue -The updated session's length value
+     * @memberof BarChart
+     * @param {number} i - The x axis day
+     * @param {string} weight - The weight
+     * @param string calorie - The calories
      */
-    function updateTooltipValue(i, sessionLengthValue) {
-      d3.select('#tooltip-text-weight-calorie').text(
-        sessionLengthValue + ' min'
+    function updateTooltipValue(i, weight, calorie) {
+      d3.select('#tooltip-text-weight').text(weight + 'kg')
+      d3.select('#tooltip-text-calorie').text(calorie + 'Kcal')
+
+      d3.select('#tooltip-container-weight-calorie').attr(
+        'transform',
+        `translate( ${chartWidth / data[0].items.length / 2},${0})`
       )
-      if (i === 0) {
-        d3.select('#tooltip-container-weight-calorie').attr(
-          'transform',
-          'translate(19.5, -43)'
-        )
-        d3.select('#tooltip-text-container-weight-calorie').attr(
-          'transform',
-          'translate(39, -28)'
-        )
-      } else if (i === 6) {
-        d3.select('#tooltip-container-weight-calorie').attr(
-          'transform',
-          'translate(-58.5, -43)'
-        )
-        d3.select('#tooltip-text-container-weight-calorie').attr(
-          'transform',
-          'translate(-39, -28)'
-        )
-      } else {
-        d3.select('#tooltip-container-weight-calorie').attr(
-          'transform',
-          'translate(-19.5, -43)'
-        )
-        d3.select('#tooltip-text-container-weight-calorie').attr(
-          'transform',
-          'translate(0, -28)'
-        )
-      }
+      d3.select('#tooltip-text-container-weight-calorie').attr(
+        'transform',
+        `translate( ${chartWidth / data[0].items.length / 2},${0})`
+      )
     }
 
     /**
      * Update the darkest colorred background's width with the selected day
      * @function
-     * @memberof LineChart
+     * @memberof BarChart
      * @param {number} x - The x current position in pixels for the day selected
      */
     function updateDarkestBackgroundWidth(x) {
@@ -419,10 +399,10 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       bgPath
         .attr('d', function () {
           return svgRoundedRectanglePath(
-            x + chartWidth / 24 / 2,
-            chartMarginTop,
-            chartWidth / 12,
-            chartHeight,
+            x,
+            height * 0.2969 - chartMarginBottom + 8,
+            chartWidth / data[0].items.length / 2,
+            chartHeight - chartMarginTop - 8,
             0,
             {
               tl: 0,
@@ -432,14 +412,14 @@ const BarChart = ({ data = [], dimensions = {} }) => {
             }
           )
         })
-        .attr('opacity', x > chartWidth ? 0 : 1)
+        .attr('opacity', x > chartWidth ? 0 : 0.5)
         .merge(bgPath)
     }
 
     /**
      * The mouse's listener to position the tooltip with the darkest background
      * @function
-     * @memberof LineChart
+     * @memberof BarChart
      * @param {object} event - The mouse event
      */
     function mousemove(event) {
@@ -447,13 +427,15 @@ const BarChart = ({ data = [], dimensions = {} }) => {
       var x0 = xScaleText.invert(d3.pointer(event)[0]),
         i = bisectDate(data[0].items, x0),
         d = data[0].items[i]
-      const x = xScaleText(d.day)
-      //   const y = yScale(d.day)
+      const y = chartMarginTop - 31.5
 
-      tooltip.attr('transform', 'translate(' + x + ',' + chartMarginTop + ')')
-      updateTooltipValue(i, d.kilogram + ' ' + d.calories)
+      tooltip.attr(
+        'transform',
+        'translate(' + xScaleText(d.day - 0.21) + ',' + y + ')'
+      )
+      updateTooltipValue(i, d.kilogram, d.calories)
       // Darkest background
-      updateDarkestBackgroundWidth(x)
+      updateDarkestBackgroundWidth(xScaleText(d.day + 0.18))
     }
   }, [data, height, width]) // Redraw chart if data or size changes
   return <svg ref={svgRef} width={width} height={height} />
