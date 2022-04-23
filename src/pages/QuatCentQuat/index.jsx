@@ -41,7 +41,11 @@ const StyledLink = styled(Link)`
     font-size: 14px;
   }
 `
-
+/**
+ * 404 page component
+ * @component
+ * @returns {React.ReactElement} The 404's page
+ */
 function QuatCentQuat() {
   return (
     <QuatCentQuatContainer>

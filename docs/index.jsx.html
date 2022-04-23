@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Components</h3><ul><li><a href="DashBoard.html">DashBoard</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-getMinMaxObjectValueOfObjectInArray.html">getMinMaxObjectValueOfObjectInArray</a></li><li><a href="module-getPrefixedNumber.html">getPrefixedNumber</a></li><li><a href="module-svgRoundedRectanglePath.html">svgRoundedRectanglePath</a></li></ul><h3>Classes</h3><ul><li><a href="User.html">User</a></li></ul><h3>Components</h3><ul><li><a href="Aside.html">Aside</a></li><li><a href="BarChart.html">BarChart</a></li><li><a href="Card.html">Card</a></li><li><a href="DashBoard.html">DashBoard</a></li><li><a href="Header.html">Header</a></li><li><a href="HomeDev.html">HomeDev</a></li><li><a href="LineChart.html">LineChart</a></li><li><a href="MockedProvider.html">MockedProvider</a></li><li><a href="QuatCentQuat.html">QuatCentQuat</a></li><li><a href="RadarBarChart.html">RadarBarChart</a></li><li><a href="RadialBarChart.html">RadialBarChart</a></li><li><a href="render.html">render</a></li><li><a href="StyledGlobalStyle.html">StyledGlobalStyle</a></li><li><a href="useService.html">useService</a></li><li><a href="useWindowWidth.html">useWindowWidth</a></li></ul><h3>Global</h3><ul><li><a href="global.html#colors">colors</a></li></ul></div>
                 
             </nav>
         </div>
@@ -89,46 +89,40 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { useParams } from 'react-router-dom'
-import styled from 'styled-components'
-import colors from '../../utils/style/colors'
+            <pre class="prettyprint source linenums"><code>import React from 'react'
+import ReactDOM from 'react-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import GlobalStyle from './style/GlobalStyle'
+import { MockedProvider } from './context'
 
-import { useService } from '../../utils/hooks'
+import Header from './components/Header'
 
-import Aside from '../../components/Aside'
-
-const DashBoardContainer = styled.div`
-  margin-top: -1px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  overflow: hidden;
-  @media only screen and (max-width: 768px) {
-  }
-`
+import HomeDev from './pages/HomeDev'
+import DashBoard from './pages/DashBoard'
+import QuatCentQuat from './pages/QuatCentQuat'
 
 /**
- * DashBoard page component
+ * Render React elements into the DOM in the #root container with page's routage
+ * @name render
  * @component
- * @returns {React.ReactElement} The dashboard.
+ * @returns {React.ReactElement} The component reference (null for stateless components)
  */
-function DashBoard() {
-  const { id } = useParams()
-
-  const { mainData } = useService(id, true)
-  const { activity } = useService(id, true)
-  const { averageSessions } = useService(id, true)
-  const { performance } = useService(id, true)
-
-  return (
-    &lt;DashBoardContainer>
-      &lt;Aside />
-      {mainData &amp;&amp; &lt;h1>{mainData.firstName}&lt;/h1>}
-    &lt;/DashBoardContainer>
-  )
-}
-
-export default DashBoard
+ReactDOM.render(
+  &lt;React.StrictMode>
+    &lt;Router>
+      &lt;MockedProvider>
+        &lt;GlobalStyle />
+        &lt;Header />
+        &lt;Routes>
+          &lt;Route path="/" element={&lt;HomeDev />} />
+          &lt;Route path="/user/:id" element={&lt;DashBoard />} />
+          &lt;Route path="*" element={&lt;QuatCentQuat />} />
+        &lt;/Routes>
+      &lt;/MockedProvider>
+    &lt;/Router>
+  &lt;/React.StrictMode>,
+  document.getElementById('root')
+)
 </code></pre>
         </article>
     </section>

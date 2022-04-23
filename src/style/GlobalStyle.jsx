@@ -1,6 +1,12 @@
 import { createGlobalStyle } from 'styled-components'
 import colors from './colors.js'
 
+/**
+ * The global style component to load for the application
+ * @name StyledGlobalStyle
+ * @component
+ * @returns {React.ReactElement} The global style component
+ */
 const StyledGlobalStyle = createGlobalStyle`
     * {
       font-family: 'Roboto', sans-serif;                

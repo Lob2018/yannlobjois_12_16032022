@@ -10,6 +10,12 @@ import HomeDev from './pages/HomeDev'
 import DashBoard from './pages/DashBoard'
 import QuatCentQuat from './pages/QuatCentQuat'
 
+/**
+ * Render React elements into the DOM in the #root container with page's routage
+ * @name render
+ * @component
+ * @returns {React.ReactElement} The component reference (null for stateless components)
+ */
 ReactDOM.render(
   <React.StrictMode>
     <Router>

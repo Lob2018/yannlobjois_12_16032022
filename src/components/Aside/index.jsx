@@ -53,8 +53,12 @@ const StyledCopyright = styled.p`
   transform: rotate(-90deg);
   color: #fff;
 `
-
-function Header() {
+/**
+ * The pages's aside
+ * @component
+ * @returns {React.ReactElement} The pages's aside
+ */
+function Aside() {
   return (
     <AsideContainer>
       <StyledNav aria-label="Navigation secondaire">
@@ -110,4 +114,4 @@ function Header() {
   )
 }
 
-export default Header
+export default Aside

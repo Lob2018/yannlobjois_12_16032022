@@ -19,17 +19,29 @@ const StyledH1 = styled.h1`
   font-weight: 700;
   line-height: 1;
 `
-
+/**
+ * HomeDev page component (interface for testing user's data)
+ * @component
+ * @returns {React.ReactElement} The HomeDev's page
+ */
 function HomeDev() {
   const navigate = useNavigate()
   const [id, setId] = useState('12')
-
+  
+  //MockedContext destructuring   
   const { setIsMocked, isMocked } = useContext(MockedContext)
 
+  /**
+   * Save the user's choice for mocked or API data int the global context
+   * @param {boolean} mocked - True for mocked data and false for API data
+   */
   function saveMockedChoice(mocked) {
     setIsMocked(mocked)
   }
-
+  /**
+   * Cancel the submit event and redirect to the corresponding page 
+   * @param {object} event - The submit event
+   */
   const handleSubmit = (event) => {
     event.preventDefault()
     navigate(`/user/` + id)

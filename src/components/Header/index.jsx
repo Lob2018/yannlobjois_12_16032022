@@ -41,7 +41,11 @@ const StyledUL = styled.ul`
 const StyledLI = styled.li`
   list-style-type: none;
 `
-
+/**
+ * The pages's header
+ * @component
+ * @returns {React.ReactElement} The pages's header
+ */
 function Header() {
   return (
     <HeaderContainer>

@@ -54,6 +54,12 @@ const StyledCardText = styled.p`
   }
 `
 
+/**
+ * Card component
+ * @component
+ * @param {*} props 
+ * @returns {React.ReactElement} The corresponding card
+ */
 function Card(props) {
   return (
     <CardContainer>
@@ -72,9 +78,21 @@ function Card(props) {
 }
 
 Card.propTypes = {
+   /**
+   * Label is a text
+   */
   label: PropTypes.string.isRequired,
+   /**
+   * Icon is a text (the path)
+   */
   icon: PropTypes.string.isRequired,
+  /**
+   * Value is a number
+   */
   value: PropTypes.number.isRequired,
+  /**
+   * Unit is a text
+   */
   unit: PropTypes.string.isRequired,
 }
 

@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> components/Charts/RadialBarChart/RadialBarChart.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">My React components</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-getMinMaxObjectValueOfObjectInArray.html">getMinMaxObjectValueOfObjectInArray</a></li><li><a href="module-getPrefixedNumber.html">getPrefixedNumber</a></li><li><a href="module-svgRoundedRectanglePath.html">svgRoundedRectanglePath</a></li></ul><h3>Classes</h3><ul><li><a href="User.html">User</a></li></ul><h3>Components</h3><ul><li><a href="Aside.html">Aside</a></li><li><a href="BarChart.html">BarChart</a></li><li><a href="Card.html">Card</a></li><li><a href="DashBoard.html">DashBoard</a></li><li><a href="Header.html">Header</a></li><li><a href="HomeDev.html">HomeDev</a></li><li><a href="LineChart.html">LineChart</a></li><li><a href="MockedProvider.html">MockedProvider</a></li><li><a href="QuatCentQuat.html">QuatCentQuat</a></li><li><a href="RadarBarChart.html">RadarBarChart</a></li><li><a href="RadialBarChart.html">RadialBarChart</a></li><li><a href="render.html">render</a></li><li><a href="StyledGlobalStyle.html">StyledGlobalStyle</a></li><li><a href="useService.html">useService</a></li><li><a href="useWindowWidth.html">useWindowWidth</a></li></ul><h3>Global</h3><ul><li><a href="global.html#colors">colors</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/Charts/RadialBarChart/RadialBarChart.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** RadialBarChart.js */
+import { useEffect, useRef } from 'react'
+import PropTypes from 'prop-types'
+
+import * as d3 from 'd3'
+
+/**
+ * The radial bar chart component
+ * @component
+ * @returns {React.ReactElement} The corresponding radial bar chart
+ */
+const RadialBarChart = ({ data = [], dimensions = {} }) => {
+    // The ref will hold our component's SVG DOM element, it's initialized null
+    const svgRef = useRef(null)
+    const { width, height, margin } = dimensions
+    const svgWidth = width + margin.left + margin.right
+    const svgHeight = height + margin.top + margin.bottom
+
+    useEffect(() => {
+            var radius = Math.min(svgWidth, svgHeight) * 0.8
+
+            // Create root container where we will append all other chart elements (current is the ref Get and Set)
+            const svgEl = d3.select(svgRef.current)
+            svgEl.selectAll('*').remove() // Clear svg content before adding new elements
+            const svg = svgEl
+                .append('svg')
+                .attr('width', svgWidth)
+                .attr('height', svgHeight)
+                .append('g')
+                .attr(
+                    'transform',
+                    'translate(' + svgWidth / 2 + ',' + svgHeight / 2 + ')'
+                )
+
+            // rest of counterclockwise version
+            var value = -Math.PI * 2 * data[0].items
+            var arc = d3
+                .arc()
+                .cornerRadius(25)
+                .innerRadius(radius / 2.55)
+                .outerRadius(radius / 2.3)
+                .startAngle(value)
+                .endAngle(0)
+
+            svg.append('path').attr('class', 'arc').attr('d', arc).attr('fill', 'red')
+
+            // Add title
+            svg
+                .append('text')
+                .attr('x', -svgWidth / 2 + 24)
+                .attr('y', -svgHeight / 2 + 30)
+                .attr('font-weight', '500')
+                .text('Score')
+                // .style('text-anchor', 'middle')
+                .attr('fill', '#20253A')
+                .style('font-size', '15px')
+
+            // Add value
+            svg
+                .append('text')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('font-weight', '700')
+                .text(data[0].items * 100 + '%')
+                .style('text-anchor', 'middle')
+                .attr('fill', '#20253A')
+                .style('font-size', '26px')
+
+            // Add 1st line of text value
+            svg
+                .append('text')
+                .attr('x', 0)
+                .attr('y', 26)
+                .attr('font-weight', '500')
+                .text('de votre')
+                .style('text-anchor', 'middle')
+                .attr('fill', '#74798C')
+                .style('font-size', '16px')
+                // Add 2nd line of text value
+            svg
+                .append('text')
+                .attr('x', 0)
+                .attr('y', 52)
+                .attr('font-weight', '500')
+                .text('objectif')
+                .style('text-anchor', 'middle')
+                .attr('fill', '#74798C')
+                .style('font-size', '16px')
+        }, [
+            data,
+            height,
+            margin,
+            margin.bottom,
+            margin.left,
+            margin.top,
+            svgHeight,
+            svgWidth,
+            width,
+        ]) // Redraw chart if data or size changes
+
+    return &lt;svg ref = { svgRef }
+    width = { svgWidth }
+    height = { svgHeight }
+    />
+}
+
+RadialBarChart.propTypes = {
+    /**
+     * Data is an object
+     */
+    data: PropTypes.object.isRequired,
+    /**
+     * Dimensions is an object
+     */
+    dimensions: PropTypes.object.isRequired,
+}
+
+RadialBarChart.defaultProps = {
+    data: {},
+    dimensions: {},
+}
+
+export default RadialBarChart</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

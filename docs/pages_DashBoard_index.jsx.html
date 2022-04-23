@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> pages/DashBoard/index.jsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">My React components</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-getMinMaxObjectValueOfObjectInArray.html">getMinMaxObjectValueOfObjectInArray</a></li><li><a href="module-getPrefixedNumber.html">getPrefixedNumber</a></li><li><a href="module-svgRoundedRectanglePath.html">svgRoundedRectanglePath</a></li></ul><h3>Classes</h3><ul><li><a href="User.html">User</a></li></ul><h3>Components</h3><ul><li><a href="Aside.html">Aside</a></li><li><a href="BarChart.html">BarChart</a></li><li><a href="Card.html">Card</a></li><li><a href="DashBoard.html">DashBoard</a></li><li><a href="Header.html">Header</a></li><li><a href="HomeDev.html">HomeDev</a></li><li><a href="LineChart.html">LineChart</a></li><li><a href="MockedProvider.html">MockedProvider</a></li><li><a href="QuatCentQuat.html">QuatCentQuat</a></li><li><a href="RadarBarChart.html">RadarBarChart</a></li><li><a href="RadialBarChart.html">RadialBarChart</a></li><li><a href="render.html">render</a></li><li><a href="StyledGlobalStyle.html">StyledGlobalStyle</a></li><li><a href="useService.html">useService</a></li><li><a href="useWindowWidth.html">useWindowWidth</a></li></ul><h3>Global</h3><ul><li><a href="global.html#colors">colors</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>pages/DashBoard/index.jsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useParams } from 'react-router-dom'
+import styled from 'styled-components'
+import { useContext } from 'react'
+
+import colors from '../../style/colors'
+import Aside from '../../components/Aside'
+import BarChart from '../../components/Charts/BarChart'
+import LineChart from '../../components/Charts/LineChart'
+import RadarBarChart from '../../components/Charts/RadarBarChart'
+import RadialBarChart from '../../components/Charts/RadialBarChart'
+import { useService } from '../../service/useService'
+import { useWindowWidth } from '../../utils/helper/useWindowWidth'
+import { MockedContext } from '../../context'
+import Card from '../../components/Card/index.jsx'
+
+import Calories from '../../assets/calories.svg'
+import Proteines from '../../assets/protein.svg'
+import Glucides from '../../assets/carbs.svg'
+import Lipides from '../../assets/fat.svg'
+
+const DashBoardContainer = styled.div`
+  width: 100%;
+  height: calc(100% - 91px);
+  display: flex;
+  @media only screen and (max-width: 768px) {
+  }
+`
+const StyledMain = styled.main`
+  margin: 68px 90px 31px 107px;
+  width: calc(100% - 107px);
+  @media only screen and (max-width: 1280px) {
+    margin: 68px 50px 31px 50px;
+  }
+`
+const StyledChartsContainer = styled.div`
+  display: flex;
+  gap: 31px;
+  @media only screen and (max-width: 1280px) {
+    flex-wrap: wrap;
+  }
+`
+
+const MainChartsContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 80%;
+  @media only screen and (max-width: 1280px) {
+    width: 100%;
+  }
+`
+const StyledH1 = styled.h1`
+  margin: 0px 0px 41px 0px;
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 24px;
+  span {
+    color: ${colors.strPrimary};
+  }
+  @media only screen and (max-width: 768px) {
+  }
+`
+
+const StyledSubTitle = styled.p`
+  margin: 0px 0px 77px 0px;
+  font-size: 18px;
+  line-height: 24px;
+  @media only screen and (max-width: 768px) {
+  }
+`
+
+const FirstChartContainer = styled.div`
+  margin: 0px 0px 30px 0px;
+  width: 100%;
+  height: 320px;
+  border-radius: 5px;
+  background-color: ${colors.bgCards};
+  z-indew
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0212249);
+  @media only screen and (max-width: 768px) {
+  }
+`
+
+const SecondChartsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3.59%;
+  width: 100%;
+  height: 263px;
+  background-color: ${colors.bgCards};
+`
+
+const SecondaryChartsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  width: 25%;
+  gap: 39px;
+  @media only screen and (max-width: 1280px) {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0px;
+    width: 100%;
+    div:first-child {
+      padding-left: 24px;
+    }
+    div:last-child {
+      padding-right: 24px;
+    }
+  }
+`
+
+/**
+ * DashBoard page component
+ * @component
+ * @returns {React.ReactElement} The dashboard's page
+ */
+function DashBoard() {
+  // The current window's width by destructuring 
+  const { windowWidth } = useWindowWidth()
+  // The type of data (mocked or API) by destructuring   
+  const { isMocked } = useContext(MockedContext)
+  // The user's id by destructuring
+  const { id } = useParams()
+  // The user's data
+  const { userData } = useService(id, isMocked)
+
+  return (
+    &lt;DashBoardContainer>
+      &lt;Aside />
+      &lt;StyledMain>
+        {userData.getMainData() &amp;&amp; (
+          &lt;StyledH1>
+            Bonjour &lt;span>{userData.getMainData().firstName}&lt;/span>
+          &lt;/StyledH1>
+        )}
+        &lt;StyledSubTitle>
+          Félicitation ! Vous avez explosé vos objectifs hier 👏
+        &lt;/StyledSubTitle>
+        &lt;StyledChartsContainer>
+          &lt;MainChartsContainer>
+            &lt;FirstChartContainer>
+              {userData.getActivityData() &amp;&amp; (
+                &lt;BarChart
+                  data={[
+                    {
+                      name: 'ActivityData',
+                      color: '#ffffff',
+                      items: userData.getActivityData().map((d, i) => ({
+                        ...d,
+                        day: i + 1,
+                      })),
+                    },
+                  ]}
+                  dimensions={{
+                    width:
+                      windowWidth &lt; 1280
+                        ? windowWidth * 0.788
+                        : windowWidth * 0.57986,
+                    height: 320,
+                  }}
+                />
+              )}
+            &lt;/FirstChartContainer>
+            &lt;SecondChartsContainer>
+              {userData.getAverageData() &amp;&amp; (
+                &lt;LineChart
+                  data={[
+                    {
+                      name: 'SessionsAverage',
+                      color: '#ffffff',
+                      items: userData.getAverageData(),
+                    },
+                  ]}
+                  dimensions={{
+                    width:
+                      windowWidth &lt; 1280
+                        ? windowWidth * 0.235
+                        : windowWidth * 0.179,
+                    height: 218,
+                    margin: { top: 30, right: 0, bottom: 15, left: 0 },
+                  }}
+                />
+              )}
+              {userData.getPerformanceData() &amp;&amp; (
+                &lt;RadarBarChart
+                  data={[
+                    {
+                      name: 'UserPerformances',
+                      color: '#ffffff',
+                      items: userData.getPerformanceData(),
+                    },
+                  ]}
+                  dimensions={{
+                    width:
+                      windowWidth &lt; 1280
+                        ? windowWidth * 0.235
+                        : windowWidth * 0.179,
+                    height: 218,
+                    margin: { top: 30, right: 0, bottom: 15, left: 0 },
+                  }}
+                />
+              )}
+              {userData.getMainData() &amp;&amp; (
+                &lt;RadialBarChart
+                  data={[
+                    {
+                      name: 'Score',
+                      color: '#ffffff',
+                      items:
+                        userData.getMainData().todayScore ||
+                        userData.getMainData().score,
+                    },
+                  ]}
+                  dimensions={{
+                    width:
+                      windowWidth &lt; 1280
+                        ? windowWidth * 0.235
+                        : windowWidth * 0.179,
+                    height: 218,
+                    margin: { top: 30, right: 0, bottom: 15, left: 0 },
+                  }}
+                />
+              )}
+            &lt;/SecondChartsContainer>
+          &lt;/MainChartsContainer>
+          &lt;SecondaryChartsContainer>
+            {userData.getMainData() &amp;&amp; (
+              &lt;>
+                &lt;Card
+                  label="Calories"
+                  icon={Calories}
+                  value={userData.getMainData().calorieCount}
+                  unit="Cal"
+                />
+                &lt;Card
+                  label="Protéines"
+                  icon={Proteines}
+                  value={userData.getMainData().proteinCount}
+                  unit="g"
+                />
+                &lt;Card
+                  label="Glucides"
+                  icon={Glucides}
+                  value={userData.getMainData().carbohydrateCount}
+                  unit="g"
+                />
+                &lt;Card
+                  label="Lipides"
+                  icon={Lipides}
+                  value={userData.getMainData().lipidCount}
+                  unit="g"
+                />
+              &lt;/>
+            )}
+          &lt;/SecondaryChartsContainer>
+        &lt;/StyledChartsContainer>
+      &lt;/StyledMain>
+    &lt;/DashBoardContainer>
+  )
+}
+
+export default DashBoard
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

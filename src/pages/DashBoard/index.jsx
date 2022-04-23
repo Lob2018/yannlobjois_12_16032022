@@ -114,14 +114,16 @@ const SecondaryChartsContainer = styled.div`
 /**
  * DashBoard page component
  * @component
- * @returns {React.ReactElement} The dashboard
+ * @returns {React.ReactElement} The dashboard's page
  */
 function DashBoard() {
+  // The current window's width by destructuring 
   const { windowWidth } = useWindowWidth()
-
+  // The type of data (mocked or API) by destructuring   
   const { isMocked } = useContext(MockedContext)
+  // The user's id by destructuring
   const { id } = useParams()
-
+  // The user's data
   const { userData } = useService(id, isMocked)
 
   return (

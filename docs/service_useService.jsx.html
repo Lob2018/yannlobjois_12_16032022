@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> service/useService.jsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">My React components</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-getMinMaxObjectValueOfObjectInArray.html">getMinMaxObjectValueOfObjectInArray</a></li><li><a href="module-getPrefixedNumber.html">getPrefixedNumber</a></li><li><a href="module-svgRoundedRectanglePath.html">svgRoundedRectanglePath</a></li></ul><h3>Classes</h3><ul><li><a href="User.html">User</a></li></ul><h3>Components</h3><ul><li><a href="Aside.html">Aside</a></li><li><a href="BarChart.html">BarChart</a></li><li><a href="Card.html">Card</a></li><li><a href="DashBoard.html">DashBoard</a></li><li><a href="Header.html">Header</a></li><li><a href="HomeDev.html">HomeDev</a></li><li><a href="LineChart.html">LineChart</a></li><li><a href="MockedProvider.html">MockedProvider</a></li><li><a href="QuatCentQuat.html">QuatCentQuat</a></li><li><a href="RadarBarChart.html">RadarBarChart</a></li><li><a href="RadialBarChart.html">RadialBarChart</a></li><li><a href="render.html">render</a></li><li><a href="StyledGlobalStyle.html">StyledGlobalStyle</a></li><li><a href="useService.html">useService</a></li><li><a href="useWindowWidth.html">useWindowWidth</a></li></ul><h3>Global</h3><ul><li><a href="global.html#colors">colors</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>service/useService.jsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+
+import axios from 'axios'
+
+import User from '../models/User.js'
+
+import USER_MAIN_DATA from '../mocked-data/USER_MAIN_DATA.json'
+import USER_ACTIVITY from '../mocked-data/USER_ACTIVITY.json'
+import USER_AVERAGE_SESSIONS from '../mocked-data/USER_AVERAGE_SESSIONS.json'
+import USER_PERFORMANCE from '../mocked-data/USER_PERFORMANCE.json'
+
+/**
+ * A hook to get a User object corresponding to the user's ID, and type of data needed (from the API or mocked)
+ * @component
+ * @param {string} userId - The user's ID
+ * @param {boolean} isMocked - True for the mocked data and false for the API data
+ * @returns {User} The corresponding User object 
+ */
+export function useService(userId, isMocked) {
+  const baseUrl = `http://localhost:3001/user/${userId}`
+  const navigate = useNavigate()
+
+  const user = new User()
+  const [userData, setData] = useState(new User())
+
+  /**
+   * Get the mocked data with the user's ID, from all the mockeddata 
+   * @param {string} strId 
+   * @param {object} mockedData 
+   * @returns {object|null}
+   */
+  function getMockedData(strId, mockedData) {
+    if (strId === undefined) return null
+    // is the id's string passed a numeric value
+    if (!/^\d+$/.test(strId)) return null
+    const iID = parseInt(strId, 10)
+    let equalId
+    if (mockedData === USER_MAIN_DATA) {
+      equalId = (element) => element.id === iID
+    } else {
+      equalId = (element) => element.userId === iID
+    }
+    const pos = mockedData.findIndex(equalId)
+    if (pos === -1) return null
+    return mockedData[pos]
+  }
+
+  /**
+   * Get the user's main data form the API 
+   * @returns {object}
+   */
+  function getMainData() {
+    return axios.get(`${baseUrl}`)
+  }
+   /**
+   * Get the user's activity data form the API 
+   * @returns {object}
+   */
+  function getActivityData() {
+    return axios.get(`${baseUrl}/activity`)
+  }
+   /**
+   * Get the user's average sessions data form the API 
+   * @returns {object}
+   */
+  function getAverageSessionsData() {
+    return axios.get(`${baseUrl}/average-sessions`)
+  }
+   /**
+   * Get the user's performance data form the API 
+   * @returns {object}
+   */
+  function getPerformanceData() {
+    return axios.get(`${baseUrl}/performance`)
+  }
+
+   /**
+   * Shows the error in the console, clear the User's object, and redirect to the 404 if an error occurs
+   * @param {string} error  
+   */
+  function gotError(error) {
+    console.error(error)
+    user.clearData()
+    setData(user)
+    navigate(`/*`)
+  }
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        if (isMocked) {
+          const responseMainData = await getMockedData(userId, USER_MAIN_DATA)
+          const responseActivityData = await getMockedData(
+            userId,
+            USER_ACTIVITY
+          )
+          const responseSessionsData = await getMockedData(
+            userId,
+            USER_AVERAGE_SESSIONS
+          )
+          const responseUserPerformance = await getMockedData(
+            userId,
+            USER_PERFORMANCE
+          )
+          if (
+            responseMainData &amp;&amp;
+            responseActivityData &amp;&amp;
+            responseSessionsData &amp;&amp;
+            responseUserPerformance
+          ) {
+            user.setAllData([
+              responseMainData,
+              responseActivityData,
+              responseSessionsData,
+              responseUserPerformance,
+            ])
+            setData(user)
+          } else
+            throw new Error(
+              "Cannot read mocked data with user's id : " + userId
+            )
+        } else {
+          await Promise.all([
+            getMainData(),
+            getActivityData(),
+            getAverageSessionsData(),
+            getPerformanceData(),
+          ])
+            .then(function (results) {
+              user.setAllData([
+                results[0].data.data,
+                results[1].data.data,
+                results[2].data.data,
+                results[3].data.data,
+              ])
+              setData(user)
+            })
+            .catch((error) => {
+              gotError(error)
+            })
+        }
+      } catch (error) {
+        gotError(error)
+      }
+    }
+    getData()
+  }, [])
+
+  return { userData }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>
