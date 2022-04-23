@@ -1,6 +1,6 @@
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
 
-# SportSee - Front-end Dashboard
+# SportSee - Front-End Dashboard
 
 This repo contains all the source code to run the Front-End dashboard.It works both with the mocked data and with [the micro API](https://github.com/OpenClassrooms-Student-Center/P9-front-end-dashboard) for the sports analytics dashboard SportSee.
 
