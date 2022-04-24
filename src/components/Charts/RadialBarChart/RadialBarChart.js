@@ -106,9 +106,9 @@ const RadialBarChart = ({ data = [], dimensions = {} }) => {
 
 RadialBarChart.propTypes = {
     /**
-     * Data is an object
+     * Data is an array
      */
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
     /**
      * Dimensions is an object
      */
@@ -116,7 +116,7 @@ RadialBarChart.propTypes = {
 }
 
 RadialBarChart.defaultProps = {
-    data: {},
+    data: [],
     dimensions: {},
 }
 

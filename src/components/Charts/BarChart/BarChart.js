@@ -454,9 +454,9 @@ const BarChart = ({ data = [], dimensions = {} }) => {
 
 BarChart.propTypes = {
     /**
-     * Data is an object
+     * Data is an array
      */
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
     /**
      * Dimensions is an object
      */
@@ -464,7 +464,7 @@ BarChart.propTypes = {
 }
 
 BarChart.defaultProps = {
-    data: {},
+    data: [],
     dimensions: {},
 }
 

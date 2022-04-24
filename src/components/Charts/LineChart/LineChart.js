@@ -347,9 +347,9 @@ const LineChart = ({ data = [], dimensions = {} }) => {
 
 LineChart.propTypes = {
     /**
-     * Data is an object
+     * Data is an array
      */
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
     /**
      * Dimensions is an object
      */
@@ -357,7 +357,7 @@ LineChart.propTypes = {
 }
 
 LineChart.defaultProps = {
-    data: {},
+    data: [],
     dimensions: {},
 }
 

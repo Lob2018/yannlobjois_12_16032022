@@ -246,9 +246,9 @@ const RadarBarChart = ({ data = [], dimensions = {} }) => {
 
 RadarBarChart.propTypes = {
     /**
-     * Data is an object
+     * Data is an array
      */
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
     /**
      * Dimensions is an object
      */
@@ -256,7 +256,7 @@ RadarBarChart.propTypes = {
 }
 
 RadarBarChart.defaultProps = {
-    data: {},
+    data: [],
     dimensions: {},
 }
 

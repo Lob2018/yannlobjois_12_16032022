@@ -11,7 +11,8 @@ import Bodybuilding from '../../assets/bodybuilding.svg'
 const AsideContainer = styled.aside`
   background-color: ${colors.bgMenu};
   width: 117px;
-  height: 100%;
+  height: calc(100% + 1px);
+  margin-top:-1px;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -109,7 +110,7 @@ function Aside() {
           </StyledLI>
         </StyledUL>
       </StyledNav>
-      <StyledCopyright>Copiryght, SportSee 2020</StyledCopyright>
+      <StyledCopyright>Copyright, SportSee 2020</StyledCopyright>
     </AsideContainer>
   )
 }

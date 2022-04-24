@@ -22,20 +22,18 @@ const DashBoardContainer = styled.div`
   width: 100%;
   height: calc(100% - 91px);
   display: flex;
-  @media only screen and (max-width: 768px) {
-  }
 `
 const StyledMain = styled.main`
   margin: 68px 90px 31px 107px;
   width: calc(100% - 107px);
-  @media only screen and (max-width: 1280px) {
+  @media only screen and (max-width: 1360px) {
     margin: 68px 50px 31px 50px;
   }
 `
 const StyledChartsContainer = styled.div`
   display: flex;
   gap: 31px;
-  @media only screen and (max-width: 1280px) {
+  @media only screen and (max-width: 1360px) {
     flex-wrap: wrap;
   }
 `
@@ -45,7 +43,7 @@ const MainChartsContainer = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 80%;
-  @media only screen and (max-width: 1280px) {
+  @media only screen and (max-width: 1360px) {
     width: 100%;
   }
 `
@@ -57,16 +55,12 @@ const StyledH1 = styled.h1`
   span {
     color: ${colors.strPrimary};
   }
-  @media only screen and (max-width: 768px) {
-  }
 `
 
 const StyledSubTitle = styled.p`
   margin: 0px 0px 77px 0px;
   font-size: 18px;
   line-height: 24px;
-  @media only screen and (max-width: 768px) {
-  }
 `
 
 const FirstChartContainer = styled.div`
@@ -77,8 +71,6 @@ const FirstChartContainer = styled.div`
   background-color: ${colors.bgCards};
   z-indew
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0212249);
-  @media only screen and (max-width: 768px) {
-  }
 `
 
 const SecondChartsContainer = styled.div`
@@ -97,15 +89,15 @@ const SecondaryChartsContainer = styled.div`
   flex-direction: column;
   width: 25%;
   gap: 39px;
-  @media only screen and (max-width: 1280px) {
+  @media only screen and (max-width: 1360px) {
     flex-direction: row;
     justify-content: space-between;
     gap: 0px;
     width: 100%;
-    div:first-child {
+    div {
       padding-left: 24px;
     }
-    div:last-child {
+    div {
       padding-right: 24px;
     }
   }
@@ -155,7 +147,7 @@ function DashBoard() {
                   ]}
                   dimensions={{
                     width:
-                      windowWidth < 1280
+                      windowWidth < 1360
                         ? windowWidth * 0.788
                         : windowWidth * 0.57986,
                     height: 320,
@@ -175,7 +167,7 @@ function DashBoard() {
                   ]}
                   dimensions={{
                     width:
-                      windowWidth < 1280
+                      windowWidth < 1360
                         ? windowWidth * 0.235
                         : windowWidth * 0.179,
                     height: 218,
@@ -194,7 +186,7 @@ function DashBoard() {
                   ]}
                   dimensions={{
                     width:
-                      windowWidth < 1280
+                      windowWidth < 1360
                         ? windowWidth * 0.235
                         : windowWidth * 0.179,
                     height: 218,
@@ -215,7 +207,7 @@ function DashBoard() {
                   ]}
                   dimensions={{
                     width:
-                      windowWidth < 1280
+                      windowWidth < 1360
                         ? windowWidth * 0.235
                         : windowWidth * 0.179,
                     height: 218,
